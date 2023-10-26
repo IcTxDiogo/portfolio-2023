@@ -5,6 +5,7 @@ import { type ReactNode } from "react";
 import { TRPCReactProvider } from "@/trpc/react";
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
+import ThemeProvider from "@/components/providers/themeProvider";
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -23,14 +24,23 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body
                 className={cn(
                     "min-h-screen bg-background font-sans antialiased",
                     fontSans.variable,
                 )}
             >
-                <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+                <TRPCReactProvider headers={headers()}>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        {children}
+                    </ThemeProvider>
+                </TRPCReactProvider>
             </body>
         </html>
     );
