@@ -1,11 +1,12 @@
-import "@/styles/globals.css";
-
-import { Inter } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
 import { headers } from "next/headers";
+import { type ReactNode } from "react";
 
 import { TRPCReactProvider } from "@/trpc/react";
+import { cn } from "@/lib/utils";
+import "@/styles/globals.css";
 
-const inter = Inter({
+const fontSans = FontSans({
     subsets: ["latin"],
     variable: "--font-sans",
 });
@@ -16,10 +17,19 @@ export const metadata = {
     icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+type RootLayoutProps = {
+    children: ReactNode;
+};
+
+export default function RootLayout({ children }: RootLayoutProps) {
     return (
         <html lang="en">
-            <body className={`font-sans ${inter.variable}`}>
+            <body
+                className={cn(
+                    "min-h-screen bg-background font-sans antialiased",
+                    fontSans.variable,
+                )}
+            >
                 <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
             </body>
         </html>
