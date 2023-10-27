@@ -1,15 +1,24 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import ThemeToggle from "@/components/themeToggle";
+import { randomUUID } from "crypto";
+
+import NavBar, { type MenuItem } from "@/components/layout/navBar";
+
+const menuItem: MenuItem[] = [
+    {
+        id: randomUUID(),
+        name: "Home",
+        href: "/",
+    },
+    {
+        id: randomUUID(),
+        name: "Example Page",
+        href: "/example-page",
+    },
+];
 
 export default function Page() {
     return (
         <>
-            <div>{"home"}</div>
-            <Link href={"/example-page"}>
-                <Button variant={"ghost"}>{"Go to example page"}</Button>
-            </Link>
-            <ThemeToggle />
+            <NavBar leftItem={"Portfolio"} items={menuItem} />
         </>
     );
 }
