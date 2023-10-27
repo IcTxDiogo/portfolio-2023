@@ -5,6 +5,10 @@
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+    images: {
+        domains: ['avatars.githubusercontent.com', 'i.ibb.co', 'i.imgur.com'],
+    },
+};
 
 export default config;
