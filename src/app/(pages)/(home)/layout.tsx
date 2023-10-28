@@ -19,6 +19,11 @@ const menuItem: MenuItem[] = [
     },
     {
         id: randomUUID(),
+        name: "Projects",
+        href: "/projects",
+    },
+    {
+        id: randomUUID(),
         name: "Example Page",
         href: "/example-page",
     },
