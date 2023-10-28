@@ -1,22 +1,8 @@
 import { randomUUID } from "crypto";
 
-import NavBar, { type MenuItem } from "@/components/layout/navBar";
 import Hero from "@/components/home/hero";
 import Technologies from "@/components/home/technologies";
 import Motivations from "@/components/home/motivations";
-
-const menuItem: MenuItem[] = [
-    {
-        id: randomUUID(),
-        name: "Home",
-        href: "/",
-    },
-    {
-        id: randomUUID(),
-        name: "Example Page",
-        href: "/example-page",
-    },
-];
 
 export interface BaseTechnology {
     id: string;
@@ -56,7 +42,6 @@ const baseTechnology: BaseTechnology[] = [
 export default function Page() {
     return (
         <>
-            <NavBar leftItem={"Portfolio"} items={menuItem} />
             <Hero />
             <Technologies technology={baseTechnology} />
             <Motivations />
