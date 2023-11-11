@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import NavBar, { type MenuItem } from "@/components/layout/navBar";
 import { randomUUID } from "crypto";
+import Footer from "@/components/layout/footer";
 
 type LayoutProps = {
     children: ReactNode;
@@ -32,8 +33,9 @@ const menuItem: MenuItem[] = [
 export default function Layout({ children }: LayoutProps) {
     return (
         <>
-            <NavBar leftItem={"Portfolio"} items={menuItem} />
+            <NavBar isHome leftItem={"Portfolio"} items={menuItem} />
             {children}
+            <Footer />
         </>
     );
 }

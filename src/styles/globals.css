@@ -74,3 +74,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+.pokebro-map div {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  transform-origin: top left;
+}

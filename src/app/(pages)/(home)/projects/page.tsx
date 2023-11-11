@@ -5,9 +5,9 @@ import ShowProjects, { type Project } from "@/components/home/showProjects";
 const projects: Project[] = [
     {
         id: randomUUID(),
-        name: "Portfolio",
-        description: "This portfolio was made using Next.js and TailwindCSS",
-        url: "",
+        name: "PokeBro - Map",
+        description: "This is the map of ot server called PokeBro",
+        url: "/project/pokebro-map",
     },
 ];
 
