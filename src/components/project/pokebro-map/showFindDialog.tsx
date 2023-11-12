@@ -41,9 +41,10 @@ export default function ShowFindDialog({ cityMarks, handleSelectMarker }: ShowFi
                         {cityMarks.map((item, index) => (
                             <CommandItem
                                 key={index}
-                                onSelect={() =>
-                                    handleSelectMarker(item.posX, item.posY, item.floor)
-                                }
+                                onSelect={() => {
+                                    handleSelectMarker(item.posX, item.posY, item.floor);
+                                    setFindDialog(false);
+                                }}
                             >
                                 <Building />
                                 <span>{item.name}</span>
