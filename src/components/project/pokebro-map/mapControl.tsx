@@ -8,13 +8,14 @@ import ShowNameCity from "@/components/project/pokebro-map/ShowNameCity";
 import useMapControl from "@/reducers/map-control/useMapControl";
 import { Button } from "@/components/ui/button";
 import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
+import ShowFindDialog from "@/components/project/pokebro-map/showFindDialog";
 
 type MapControlProps = {
     cityMarks: MapMarkers;
 };
 
 export default function MapControl({ cityMarks }: MapControlProps) {
-    const { posX, posY, scale, divRef, onMouseDown, onZoom } = useMapControl();
+    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker } = useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(false);
 
@@ -33,6 +34,12 @@ export default function MapControl({ cityMarks }: MapControlProps) {
             width: "2048px",
             height: "2048px",
         };
+    }
+
+    function handleSelectMarker(x: number, y: number, floor: number) {
+        console.log(x, y, floor);
+        setFloor(floor);
+        selectMarker(x, y);
     }
 
     const style = getStyleOfDiv();
@@ -62,6 +69,7 @@ export default function MapControl({ cityMarks }: MapControlProps) {
                         </Button>
                     </MenuNavigation>
                 </div>
+                <ShowFindDialog cityMarks={cityMarks} handleSelectMarker={handleSelectMarker} />
             </main>
         </>
     );

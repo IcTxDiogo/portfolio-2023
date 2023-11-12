@@ -1,4 +1,4 @@
-import { type types } from "@/reducers/pokebro-map/actions";
+import { type types } from "./actions";
 
 type Action = {
     type?: (typeof types)[keyof typeof types];
@@ -7,6 +7,8 @@ type Action = {
     zoomIn?: boolean;
     zoomScale?: number;
     divRect?: DOMRect;
+    x?: number;
+    y?: number;
 };
 
 export const initialState = {
@@ -16,18 +18,21 @@ export const initialState = {
     oldPosY: 0,
     scale: 1,
     scaleHeight: 0,
+    width: 0,
+    height: 0,
 };
 
 export default function reducer(state = initialState, action: Action) {
-    if (action.mouseX === undefined || action.mouseY === undefined) return state;
     switch (action.type) {
         case "SLIDE_START":
+            if (action.mouseX === undefined || action.mouseY === undefined) return state;
             return {
                 ...state,
                 oldPosX: action.mouseX,
                 oldPosY: action.mouseY,
             };
         case "SLIDE":
+            if (action.mouseX === undefined || action.mouseY === undefined) return state;
             return {
                 ...state,
                 posX: state.posX + action.mouseX - state.oldPosX,
@@ -36,6 +41,7 @@ export default function reducer(state = initialState, action: Action) {
                 oldPosY: action.mouseY,
             };
         case "ZOOM":
+            if (action.mouseX === undefined || action.mouseY === undefined) return state;
             if (action.zoomScale === undefined || action.divRect === undefined) return state;
             //zoom in/out with mouse wheel on cursor position
             const newZoomScale = action.zoomIn
@@ -53,6 +59,25 @@ export default function reducer(state = initialState, action: Action) {
                 posX: newPosX,
                 posY: newPosY,
                 scaleHeight: newScaleHeight,
+            };
+        case "GOTO":
+            if (action.x === undefined || action.y === undefined || action.divRect === undefined)
+                return state;
+            //calculate the new offset to center the x,y position on center of the screen
+            const newGotoPosX = state.width / 2 - action.x;
+            const newGotoPosY = state.height / 2 - action.y;
+
+            return {
+                ...state,
+                posX: newGotoPosX,
+                posY: newGotoPosY,
+            };
+        case "RESIZE":
+            if (action.x === undefined || action.y === undefined) return state;
+            return {
+                ...state,
+                width: action.x,
+                height: action.y,
             };
 
         default:

@@ -15,12 +15,12 @@ CREATE TABLE `portfolio-2023_account` (
 --> statement-breakpoint
 CREATE TABLE `portfolio-2023_pokebroMapMarker` (
 	`id` bigint AUTO_INCREMENT NOT NULL,
-	`name` varchar(256),
-	`posX` int,
-	`posY` int,
-	`floor` int,
+	`name` varchar(256) NOT NULL,
+	`posX` int NOT NULL,
+	`posY` int NOT NULL,
+	`floor` int NOT NULL,
 	`information` varchar(256),
-	`type` varchar(256),
+	`type` varchar(256) NOT NULL,
 	`created_at` timestamp DEFAULT (now()),
 	`updatedAt` timestamp ON UPDATE CURRENT_TIMESTAMP,
 	`deletedAt` timestamp DEFAULT NULL,

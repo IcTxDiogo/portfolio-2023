@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "25c046b9-15b4-4778-b6cf-bccee3149bef",
+  "id": "5d3dfc63-e938-4e9b-8f30-1a10c8e2946b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "portfolio-2023_account": {
@@ -120,28 +120,28 @@
           "name": "name",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "posX": {
           "name": "posX",
           "type": "int",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "posY": {
           "name": "posY",
           "type": "int",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "floor": {
           "name": "floor",
           "type": "int",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "information": {
@@ -155,7 +155,7 @@
           "name": "type",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "created_at": {

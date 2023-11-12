@@ -3,15 +3,14 @@ import { api } from "@/trpc/server";
 
 export type MapMarkers = {
     id: number;
-    name: string | null;
+    name: string;
     createdAt: Date | null;
     updatedAt: Date | null;
-    type: string | null;
-    posX: number | null;
-    posY: number | null;
-    floor: number | null;
-    information: string | null;
     deletedAt: Date | null;
+    posX: number;
+    posY: number;
+    floor: number;
+    information: string | null;
 }[];
 
 export default async function Page() {

@@ -116,12 +116,12 @@ export const pokebroMapMarker = mysqlTable(
     "pokebroMapMarker",
     {
         id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-        name: varchar("name", { length: 256 }),
-        posX: int("posX"),
-        posY: int("posY"),
-        floor: int("floor"),
+        name: varchar("name", { length: 256 }).notNull(),
+        posX: int("posX").notNull(),
+        posY: int("posY").notNull(),
+        floor: int("floor").notNull(),
         information: varchar("information", { length: 256 }),
-        type: varchar("type", { length: 256 }),
+        type: varchar("type", { length: 256 }).notNull(),
         ...timeStampsWithSoftDeletes,
     },
     (example) => ({

@@ -6,6 +6,8 @@ export const types = {
     SLIDE: "SLIDE",
     SLIDE_START: "SLIDE_START",
     ZOOM: "ZOOM",
+    GOTO: "GOTO",
+    RESIZE: "RESIZE",
 };
 
 export function startSlide(e: MouseEvent) {
@@ -38,5 +40,22 @@ export function zoom(e: WheelEvent, divRef: RefObject<HTMLDivElement>) {
         mouseY: e.clientY,
         zoomScale: ZOOM_scale,
         divRect: divRef.current.getBoundingClientRect(),
+    };
+}
+
+export function goto(x: number, y: number, divRef: RefObject<HTMLDivElement>) {
+    return {
+        type: types.GOTO,
+        x,
+        y,
+        divRect: divRef.current?.getBoundingClientRect(),
+    };
+}
+
+export function resize(width: number, height: number) {
+    return {
+        type: types.RESIZE,
+        x: width,
+        y: height,
     };
 }
