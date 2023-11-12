@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 type MenuNavigationProps = {
     floor: number;
     setFloor: (floor: number) => void;
+    children?: ReactNode;
 };
 
 type MapNavigationItem = {
@@ -17,7 +18,7 @@ type MapNavigationItem = {
     parameter: "up" | "down" | "7";
 };
 
-export default function MenuNavigation({ floor, setFloor }: MenuNavigationProps) {
+export default function MenuNavigation({ floor, setFloor, children }: MenuNavigationProps) {
     function controlFloor(action: "up" | "down" | "7") {
         if (action === "up") {
             if (floor < 15) {
@@ -50,7 +51,7 @@ export default function MenuNavigation({ floor, setFloor }: MenuNavigationProps)
     return (
         <NavigationMenu>
             <NavigationMenuList
-                className={"flex flex-col items-center justify-center gap-2 space-x-0"}
+                className={"flex max-w-fit flex-col items-center justify-center gap-2 space-x-0"}
             >
                 {mapNavigationItem.map((item, index) => (
                     <NavigationMenuItem key={index}>
@@ -63,6 +64,7 @@ export default function MenuNavigation({ floor, setFloor }: MenuNavigationProps)
                         </Button>
                     </NavigationMenuItem>
                 ))}
+                {children}
             </NavigationMenuList>
         </NavigationMenu>
     );

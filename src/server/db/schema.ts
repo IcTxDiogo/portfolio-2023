@@ -105,117 +105,26 @@ export const verificationTokens = mysqlTable(
 );
 
 const timeStampsWithSoftDeletes = {
-    createdAt: timestamp("created_at").notNull(),
+    createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
     deletedAt: timestamp("deletedAt").default(sql`NULL`),
 };
 
-export const questionnaire = mysqlTable(
-    "questionnaire",
+//pokebro-map tables
+
+export const pokebroMapMarker = mysqlTable(
+    "pokebroMapMarker",
     {
         id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
         name: varchar("name", { length: 256 }),
-        createdById: varchar("createdById", { length: 255 }).notNull(),
+        posX: int("posX"),
+        posY: int("posY"),
+        floor: int("floor"),
+        information: varchar("information", { length: 256 }),
+        type: varchar("type", { length: 256 }),
         ...timeStampsWithSoftDeletes,
     },
     (example) => ({
-        createdByIdIdx: index("createdById_idx").on(example.createdById),
         nameIndex: index("name_idx").on(example.name),
-    }),
-);
-
-export const questionnaireRelations = relations(questionnaire, ({ many, one }) => ({
-    createdById: one(users, { fields: [questionnaire.createdById], references: [users.id] }),
-    questionnaireQuestion: many(questionnaireQuestion),
-    questionnaireUserAnswer: many(questionnaireUserAnswer),
-}));
-
-export const questionnaireQuestion = mysqlTable(
-    "questionnaireQuestion",
-    {
-        id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-        questionnaireId: bigint("questionnaireId", { mode: "number" }).notNull(),
-        question: varchar("question", { length: 256 }),
-        ...timeStampsWithSoftDeletes,
-    },
-    (example) => ({
-        questionnaireIdIdx: index("questionnaireId_idx").on(example.questionnaireId),
-        questionIndex: index("question_idx").on(example.question),
-    }),
-);
-
-export const questionnaireQuestionRelations = relations(questionnaireQuestion, ({ many, one }) => ({
-    questionnaireId: one(questionnaire, {
-        fields: [questionnaireQuestion.questionnaireId],
-        references: [questionnaire.id],
-    }),
-    questionnaireQuestionOption: many(questionnaireQuestionOption),
-}));
-
-export const questionnaireQuestionOption = mysqlTable(
-    "questionnaireQuestionOption",
-    {
-        id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-        questionnaireQuestionId: bigint("questionnaireQuestionId", { mode: "number" }).notNull(),
-        option: varchar("option", { length: 256 }),
-        ...timeStampsWithSoftDeletes,
-    },
-    (example) => ({
-        questionnaireQuestionIdIdx: index("questionnaireQuestionId_idx").on(
-            example.questionnaireQuestionId,
-        ),
-        optionIndex: index("option_idx").on(example.option),
-    }),
-);
-
-export const questionnaireUserAnswer = mysqlTable(
-    "questionnaireUserAnswer",
-    {
-        id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-        questionnaireId: bigint("questionnaireId", { mode: "number" }).notNull(),
-        userId: varchar("userId", { length: 255 }).notNull(),
-        ...timeStampsWithSoftDeletes,
-    },
-    (example) => ({
-        questionnaireIdIdx: index("questionnaireId_idx").on(example.questionnaireId),
-        userIdIdx: index("userId_idx").on(example.userId),
-    }),
-);
-
-export const questionnaireUserAnswerRelations = relations(
-    questionnaireUserAnswer,
-    ({ many, one }) => ({
-        questionnaireId: one(questionnaire, {
-            fields: [questionnaireUserAnswer.questionnaireId],
-            references: [questionnaire.id],
-        }),
-        userId: one(users, {
-            fields: [questionnaireUserAnswer.userId],
-            references: [users.id],
-        }),
-        questionnaireUserAnswerOption: many(questionnaireUserAnswerOption),
-    }),
-);
-
-export const questionnaireUserAnswerOption = mysqlTable(
-    "questionnaireUserAnswerOption",
-    {
-        id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-        questionnaireUserAnswerId: bigint("questionnaireUserAnswerId", {
-            mode: "number",
-        }).notNull(),
-        questionnaireQuestionOptionId: bigint("questionnaireQuestionOptionId", {
-            mode: "number",
-        }).notNull(),
-        answer: varchar("answer", { length: 256 }),
-        ...timeStampsWithSoftDeletes,
-    },
-    (example) => ({
-        questionnaireUserAnswerIdIdx: index("questionnaireUserAnswerId_idx").on(
-            example.questionnaireUserAnswerId,
-        ),
-        questionnaireQuestionOptionIdIdx: index("questionnaireQuestionOptionId_idx").on(
-            example.questionnaireQuestionOptionId,
-        ),
     }),
 );
