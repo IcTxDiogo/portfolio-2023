@@ -6,7 +6,6 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import ThemeProvider from "@/components/providers/themeProvider";
-import Footer from "@/components/layout/footer";
 
 const fontSans = FontSans({
     subsets: ["latin"],

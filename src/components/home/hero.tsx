@@ -7,7 +7,7 @@ export default function Hero() {
     return (
         <div
             className={
-                "bg-constellation-bg flex h-[93vh] items-center justify-center bg-constellation"
+                "flex h-[93vh] items-center justify-center bg-constellation-bg bg-constellation"
             }
         >
             <div className="flex flex-col items-center justify-center px-4 sm:flex-row-reverse">
