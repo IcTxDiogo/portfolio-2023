@@ -1,7 +1,7 @@
 import MapControl from "@/components/project/pokebro-map/mapControl";
 import { api } from "@/trpc/server";
 
-export type CitiesMarkers = {
+export type MapMarkers = {
     id: number;
     name: string | null;
     createdAt: Date | null;

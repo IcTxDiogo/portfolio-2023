@@ -1,8 +1,8 @@
-import { type CitiesMarkers } from "@/app/(pages)/project/pokebro-map/page";
+import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 
 type ShowNameCityProps = {
     scale: number;
-    cityMarks: CitiesMarkers;
+    cityMarks: MapMarkers;
 };
 
 function getTextClass(scale: number) {

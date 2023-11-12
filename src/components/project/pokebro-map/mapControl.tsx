@@ -7,10 +7,10 @@ import MenuNavigation from "@/components/project/pokebro-map/menuNavigation";
 import ShowNameCity from "@/components/project/pokebro-map/ShowNameCity";
 import useMapControl from "@/reducers/map-control/useMapControl";
 import { Button } from "@/components/ui/button";
-import { type CitiesMarkers } from "@/app/(pages)/project/pokebro-map/page";
+import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 
 type MapControlProps = {
-    cityMarks: CitiesMarkers;
+    cityMarks: MapMarkers;
 };
 
 export default function MapControl({ cityMarks }: MapControlProps) {
