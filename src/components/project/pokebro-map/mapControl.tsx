@@ -9,6 +9,7 @@ import useMapControl from "@/reducers/map-control/useMapControl";
 import { Button } from "@/components/ui/button";
 import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import ShowFindDialog from "@/components/project/pokebro-map/showFindDialog";
+import AddNewMarkDialog from "@/components/project/pokebro-map/addNewMarkDialog";
 
 type MapControlProps = {
     cityMarks: MapMarkers;
@@ -67,6 +68,7 @@ export default function MapControl({ cityMarks }: MapControlProps) {
                         >
                             <Building />
                         </Button>
+                        <AddNewMarkDialog />
                     </MenuNavigation>
                 </div>
                 <ShowFindDialog cityMarks={cityMarks} handleSelectMarker={handleSelectMarker} />
