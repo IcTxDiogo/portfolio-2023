@@ -1,6 +1,8 @@
 import MapControl from "@/components/project/pokebro-map/mapControl";
 import { api } from "@/trpc/server";
 
+export const dynamic = "force-dynamic";
+
 export type MapMarkers = {
     id: number;
     name: string;
