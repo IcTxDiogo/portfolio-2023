@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowUp, Home } from "lucide-react";
 import { type ReactNode } from "react";
 import {
     NavigationMenu,
@@ -6,6 +6,7 @@ import {
     NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 type MenuNavigationProps = {
     floor: number;
@@ -16,6 +17,11 @@ type MenuNavigationProps = {
 type MapNavigationItem = {
     content: ReactNode;
     parameter: "up" | "down" | "7";
+};
+
+type MapLinkItem = {
+    content: ReactNode;
+    href: string;
 };
 
 export default function MenuNavigation({ floor, setFloor, children }: MenuNavigationProps) {
@@ -48,11 +54,27 @@ export default function MenuNavigation({ floor, setFloor, children }: MenuNaviga
         },
     ];
 
+    const mapLinkItem: MapLinkItem[] = [
+        {
+            content: <Home />,
+            href: "/projects",
+        },
+    ];
+
     return (
         <NavigationMenu>
             <NavigationMenuList
                 className={"flex max-w-fit flex-col items-center justify-center gap-2 space-x-0"}
             >
+                {mapLinkItem.map((item, index) => (
+                    <NavigationMenuItem key={index}>
+                        <Link href={item.href}>
+                            <Button variant={"outline"} size={"icon"}>
+                                {item.content}
+                            </Button>
+                        </Link>
+                    </NavigationMenuItem>
+                ))}
                 {mapNavigationItem.map((item, index) => (
                     <NavigationMenuItem key={index}>
                         <Button
