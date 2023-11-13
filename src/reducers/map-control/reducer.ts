@@ -64,8 +64,8 @@ export default function reducer(state = initialState, action: Action) {
             if (action.x === undefined || action.y === undefined || action.divRect === undefined)
                 return state;
             //calculate the new offset to center the x,y position on center of the screen
-            const newGotoPosX = state.width / 2 - action.x;
-            const newGotoPosY = state.height / 2 - action.y;
+            const newGotoPosX = state.width / 2 - action.x * state.scale;
+            const newGotoPosY = state.height / 2 - action.y * state.scale;
 
             return {
                 ...state,
