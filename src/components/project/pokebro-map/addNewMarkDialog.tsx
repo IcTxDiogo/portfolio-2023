@@ -10,8 +10,45 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+
+const formSchema = z.object({
+    Name: z.string().min(3),
+    PositionX: z.number(),
+    PositionY: z.number(),
+    Floor: z.number(),
+    Information: z.string(),
+    Type: z.string(),
+});
 
 export default function AddNewMarkDialog() {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            Name: "",
+            PositionX: 0,
+            PositionY: 0,
+            Floor: 0,
+            Information: "",
+            Type: "",
+        },
+    });
+
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(values);
+    }
+
     return (
         <>
             <Dialog>
@@ -25,15 +62,29 @@ export default function AddNewMarkDialog() {
                     onMouseDown={(e) => e.stopPropagation()}
                 >
                     <DialogHeader>
-                        <DialogTitle>Add new marker</DialogTitle>
+                        <DialogTitle>New marker</DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Name of the marker
-                            </Label>
-                            <Input id="name" className="col-span-3" />
-                        </div>
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className={"space-y-8"}>
+                                <FormField
+                                    control={form.control}
+                                    name={"Name"}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Name</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                The name of the marker
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </form>
+                        </Form>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="posX" className="text-right">
                                 Position X
