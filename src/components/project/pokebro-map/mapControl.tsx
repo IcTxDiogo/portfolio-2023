@@ -10,6 +10,12 @@ import { Button } from "@/components/ui/button";
 import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import ShowFindDialog from "@/components/project/pokebro-map/showFindDialog";
 import AddNewMarkDialog from "@/components/project/pokebro-map/addNewMarkDialog";
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 type MapControlProps = {
     cityMarks: MapMarkers;
@@ -38,9 +44,13 @@ export default function MapControl({ cityMarks }: MapControlProps) {
     }
 
     function handleSelectMarker(x: number, y: number, floor: number) {
-        console.log(x, y, floor);
         setFloor(floor);
         selectMarker(x, y);
+    }
+
+    function getMousePosition(e: MouseEvent) {
+        const x = e.clientX - posX;
+        const y = e.clientY - posY;
     }
 
     const style = getStyleOfDiv();
@@ -52,26 +62,38 @@ export default function MapControl({ cityMarks }: MapControlProps) {
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}
                 onWheel={(e) => onZoom(e.nativeEvent)}
             >
-                <div style={style} ref={divRef}>
-                    {showNameCity && <ShowNameCity scale={scale} cityMarks={cityMarks} />}
-                </div>
-                <div
-                    className={
-                        "absolute inset-y-0 right-[20px] z-50 flex flex-col items-center justify-center gap-2 "
-                    }
-                >
-                    <MenuNavigation floor={floor} setFloor={setFloor}>
-                        <Button
-                            variant={"outline"}
-                            size={"icon"}
-                            onClick={() => setShowNameCity(!showNameCity)}
+                <ContextMenu>
+                    <ContextMenuTrigger>
+                        <div style={style} ref={divRef}>
+                            {showNameCity && <ShowNameCity scale={scale} cityMarks={cityMarks} />}
+                        </div>
+                        <div
+                            className={
+                                "absolute inset-y-0 right-[20px] z-50 flex flex-col items-center justify-center gap-2 "
+                            }
                         >
-                            <Building />
-                        </Button>
-                        <AddNewMarkDialog />
-                    </MenuNavigation>
-                </div>
-                <ShowFindDialog cityMarks={cityMarks} handleSelectMarker={handleSelectMarker} />
+                            <MenuNavigation floor={floor} setFloor={setFloor}>
+                                <Button
+                                    variant={"outline"}
+                                    size={"icon"}
+                                    onClick={() => setShowNameCity(!showNameCity)}
+                                >
+                                    <Building />
+                                </Button>
+                                <AddNewMarkDialog />
+                            </MenuNavigation>
+                        </div>
+                        <ShowFindDialog
+                            cityMarks={cityMarks}
+                            handleSelectMarker={handleSelectMarker}
+                        />
+                    </ContextMenuTrigger>
+                    <ContextMenuContent>
+                        <ContextMenuItem onClick={(e) => getMousePosition(e.nativeEvent)}>
+                            New mark here
+                        </ContextMenuItem>
+                    </ContextMenuContent>
+                </ContextMenu>
             </main>
         </>
     );

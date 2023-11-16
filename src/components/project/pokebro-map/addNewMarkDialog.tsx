@@ -14,6 +14,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { api } from "@/trpc/react";
 
 const formSchema = z.object({
     name: z.string().min(3),
@@ -37,8 +38,10 @@ export default function AddNewMarkDialog() {
         },
     });
 
+    const markCreate = api.pokebroMap.createMarker.useMutation();
+
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+        markCreate.mutate(values);
     }
 
     return (
