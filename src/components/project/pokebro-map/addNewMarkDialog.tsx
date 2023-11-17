@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Plus } from "lucide-react";
+import { type ReactNode } from "react";
 import { z } from "zod";
 
 import FormItemRender from "@/components/form/formItemRender";
@@ -15,6 +15,12 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { api } from "@/trpc/react";
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 const formSchema = z.object({
     name: z.string().min(3),
@@ -25,7 +31,12 @@ const formSchema = z.object({
     type: z.string(),
 });
 
-export default function AddNewMarkDialog() {
+type addNewMarkDialogProps = {
+    children: ReactNode;
+    getMousePosition: (e: MouseEvent) => { x: number; y: number; floor: number };
+};
+
+export default function AddNewMarkDialog({ children, getMousePosition }: addNewMarkDialogProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -40,6 +51,13 @@ export default function AddNewMarkDialog() {
 
     const markCreate = api.pokebroMap.createMarker.useMutation();
 
+    function handeMarkClick(e: MouseEvent) {
+        const { x, y, floor } = getMousePosition(e);
+        form.setValue("posX", x);
+        form.setValue("posY", y);
+        form.setValue("floor", floor);
+    }
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         markCreate.mutate(values);
     }
@@ -47,11 +65,16 @@ export default function AddNewMarkDialog() {
     return (
         <>
             <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline" size={"icon"}>
-                        <Plus />
-                    </Button>
-                </DialogTrigger>
+                <ContextMenu>
+                    <ContextMenuTrigger>{children}</ContextMenuTrigger>
+                    <ContextMenuContent>
+                        <DialogTrigger asChild>
+                            <ContextMenuItem onClick={(e) => handeMarkClick(e.nativeEvent)}>
+                                New mark here
+                            </ContextMenuItem>
+                        </DialogTrigger>
+                    </ContextMenuContent>
+                </ContextMenu>
                 <DialogContent
                     className="sm:max-w-[425px]"
                     onMouseDown={(e) => e.stopPropagation()}

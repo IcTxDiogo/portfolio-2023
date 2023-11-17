@@ -10,19 +10,15 @@ import { Button } from "@/components/ui/button";
 import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import ShowFindDialog from "@/components/project/pokebro-map/showFindDialog";
 import AddNewMarkDialog from "@/components/project/pokebro-map/addNewMarkDialog";
-import {
-    ContextMenu,
-    ContextMenuContent,
-    ContextMenuItem,
-    ContextMenuTrigger,
-} from "@/components/ui/context-menu";
+import { ZOOM_SCALE } from "@/reducers/map-control/actions";
 
 type MapControlProps = {
     cityMarks: MapMarkers;
 };
 
 export default function MapControl({ cityMarks }: MapControlProps) {
-    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker } = useMapControl();
+    const { posX, posY, scale, scaleHeight, divRef, onMouseDown, onZoom, selectMarker } =
+        useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(false);
 
@@ -49,8 +45,30 @@ export default function MapControl({ cityMarks }: MapControlProps) {
     }
 
     function getMousePosition(e: MouseEvent) {
-        const x = e.clientX - posX;
-        const y = e.clientY - posY;
+        let calculatedPoxY = e.clientY - posY;
+        let calculatedPosX = e.clientX - posX;
+        let calculatedScale = scale;
+        console.log(scale);
+        if (scaleHeight !== 0) {
+            if (scaleHeight < 0) {
+                for (let i = 0; i < Math.abs(scaleHeight); i++) {
+                    calculatedPoxY = calculatedPoxY * ZOOM_SCALE;
+                    calculatedPosX = calculatedPosX * ZOOM_SCALE;
+                    calculatedScale = calculatedScale * ZOOM_SCALE;
+                    console.log(calculatedPoxY, calculatedPosX, calculatedScale);
+                }
+            } else {
+                for (let i = 0; i < Math.abs(scaleHeight); i++) {
+                    calculatedPoxY = calculatedPoxY / ZOOM_SCALE;
+                    calculatedPosX = calculatedPosX / ZOOM_SCALE;
+                    calculatedScale = calculatedScale / ZOOM_SCALE;
+                    console.log(calculatedPoxY, calculatedPosX, calculatedScale);
+                }
+            }
+        }
+        const x = calculatedPoxY;
+        const y = calculatedPosX;
+        return { x, y, floor };
     }
 
     const style = getStyleOfDiv();
@@ -62,38 +80,27 @@ export default function MapControl({ cityMarks }: MapControlProps) {
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}
                 onWheel={(e) => onZoom(e.nativeEvent)}
             >
-                <ContextMenu>
-                    <ContextMenuTrigger>
-                        <div style={style} ref={divRef}>
-                            {showNameCity && <ShowNameCity scale={scale} cityMarks={cityMarks} />}
-                        </div>
-                        <div
-                            className={
-                                "absolute inset-y-0 right-[20px] z-50 flex flex-col items-center justify-center gap-2 "
-                            }
-                        >
-                            <MenuNavigation floor={floor} setFloor={setFloor}>
-                                <Button
-                                    variant={"outline"}
-                                    size={"icon"}
-                                    onClick={() => setShowNameCity(!showNameCity)}
-                                >
-                                    <Building />
-                                </Button>
-                                <AddNewMarkDialog />
-                            </MenuNavigation>
-                        </div>
-                        <ShowFindDialog
-                            cityMarks={cityMarks}
-                            handleSelectMarker={handleSelectMarker}
-                        />
-                    </ContextMenuTrigger>
-                    <ContextMenuContent>
-                        <ContextMenuItem onClick={(e) => getMousePosition(e.nativeEvent)}>
-                            New mark here
-                        </ContextMenuItem>
-                    </ContextMenuContent>
-                </ContextMenu>
+                <AddNewMarkDialog getMousePosition={getMousePosition}>
+                    <div style={style} ref={divRef}>
+                        {showNameCity && <ShowNameCity scale={scale} cityMarks={cityMarks} />}
+                    </div>
+                    <div
+                        className={
+                            "absolute inset-y-0 right-[20px] z-50 flex flex-col items-center justify-center gap-2 "
+                        }
+                    >
+                        <MenuNavigation floor={floor} setFloor={setFloor}>
+                            <Button
+                                variant={"outline"}
+                                size={"icon"}
+                                onClick={() => setShowNameCity(!showNameCity)}
+                            >
+                                <Building />
+                            </Button>
+                        </MenuNavigation>
+                    </div>
+                    <ShowFindDialog cityMarks={cityMarks} handleSelectMarker={handleSelectMarker} />
+                </AddNewMarkDialog>
             </main>
         </>
     );
