@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-type FormItemRenderProps<TFormValues extends FieldValues> = {
+export type FormItemRenderProps<TFormValues extends FieldValues> = {
     form: UseFormReturn<TFormValues>;
     name: Path<TFormValues>;
     label: string;

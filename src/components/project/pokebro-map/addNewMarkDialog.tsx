@@ -1,12 +1,8 @@
-import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { FieldValues, useForm } from "react-hook-form";
 import { type ReactNode } from "react";
 import { z } from "zod";
 
-import FormItemRender from "@/components/form/formItemRender";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Form } from "@/components/ui/form";
 import {
     Dialog,
     DialogContent,
@@ -14,13 +10,18 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { api } from "@/trpc/react";
 import {
     ContextMenu,
     ContextMenuContent,
     ContextMenuItem,
     ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import FormItemRender, { FormItemRenderProps } from "@/components/form/formItemRender";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { api } from "@/trpc/react";
 
 const formSchema = z.object({
     name: z.string().min(3),
@@ -50,8 +51,9 @@ export default function AddNewMarkDialog({ children, getMousePosition }: addNewM
     });
 
     const markCreate = api.pokebroMap.createMarker.useMutation();
+    const router = useRouter();
 
-    function handeMarkClick(e: MouseEvent) {
+    function handleMarkClick(e: MouseEvent) {
         const { x, y, floor } = getMousePosition(e);
         form.setValue("posX", x);
         form.setValue("posY", y);
@@ -60,6 +62,7 @@ export default function AddNewMarkDialog({ children, getMousePosition }: addNewM
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         markCreate.mutate(values);
+        router.refresh();
     }
 
     return (
@@ -69,7 +72,7 @@ export default function AddNewMarkDialog({ children, getMousePosition }: addNewM
                     <ContextMenuTrigger>{children}</ContextMenuTrigger>
                     <ContextMenuContent>
                         <DialogTrigger asChild>
-                            <ContextMenuItem onClick={(e) => handeMarkClick(e.nativeEvent)}>
+                            <ContextMenuItem onClick={(e) => handleMarkClick(e.nativeEvent)}>
                                 New mark here
                             </ContextMenuItem>
                         </DialogTrigger>
@@ -120,8 +123,11 @@ export default function AddNewMarkDialog({ children, getMousePosition }: addNewM
                                 label={"Type"}
                                 renderItem={(field) => <Input {...field} />}
                             />
+
                             <div className={"flex justify-end pt-4"}>
-                                <Button type="submit">Save changes</Button>
+                                <DialogTrigger asChild>
+                                    <Button type="submit">Save changes</Button>
+                                </DialogTrigger>
                             </div>
                         </form>
                     </Form>

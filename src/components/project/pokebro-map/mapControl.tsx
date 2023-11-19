@@ -1,26 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { Building } from "lucide-react";
+import { Building, Coins } from "lucide-react";
 
 import MenuNavigation from "@/components/project/pokebro-map/menuNavigation";
-import ShowNameCity from "@/components/project/pokebro-map/ShowNameCity";
+import ShowMarkMap from "@/components/project/pokebro-map/showMarkMap";
 import useMapControl from "@/reducers/map-control/useMapControl";
 import { Button } from "@/components/ui/button";
 import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import ShowFindDialog from "@/components/project/pokebro-map/showFindDialog";
 import AddNewMarkDialog from "@/components/project/pokebro-map/addNewMarkDialog";
-import { ZOOM_SCALE } from "@/reducers/map-control/actions";
 
 type MapControlProps = {
     cityMarks: MapMarkers;
+    trailMarks: MapMarkers;
 };
 
-export default function MapControl({ cityMarks }: MapControlProps) {
-    const { posX, posY, scale, scaleHeight, divRef, onMouseDown, onZoom, selectMarker } =
-        useMapControl();
+export default function MapControl({ cityMarks, trailMarks }: MapControlProps) {
+    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker } = useMapControl();
     const [floor, setFloor] = useState(7);
-    const [showNameCity, setShowNameCity] = useState(false);
+    const [showNameCity, setShowNameCity] = useState(true);
+    const [showTrail, setShowTrail] = useState(false);
 
     function getStyleOfDiv() {
         let fileFloor = 7;
@@ -45,29 +45,11 @@ export default function MapControl({ cityMarks }: MapControlProps) {
     }
 
     function getMousePosition(e: MouseEvent) {
-        let calculatedPoxY = e.clientY - posY;
-        let calculatedPosX = e.clientX - posX;
-        let calculatedScale = scale;
+        console.log(e.clientX, e.clientY);
+        console.log(posX, posY);
         console.log(scale);
-        if (scaleHeight !== 0) {
-            if (scaleHeight < 0) {
-                for (let i = 0; i < Math.abs(scaleHeight); i++) {
-                    calculatedPoxY = calculatedPoxY * ZOOM_SCALE;
-                    calculatedPosX = calculatedPosX * ZOOM_SCALE;
-                    calculatedScale = calculatedScale * ZOOM_SCALE;
-                    console.log(calculatedPoxY, calculatedPosX, calculatedScale);
-                }
-            } else {
-                for (let i = 0; i < Math.abs(scaleHeight); i++) {
-                    calculatedPoxY = calculatedPoxY / ZOOM_SCALE;
-                    calculatedPosX = calculatedPosX / ZOOM_SCALE;
-                    calculatedScale = calculatedScale / ZOOM_SCALE;
-                    console.log(calculatedPoxY, calculatedPosX, calculatedScale);
-                }
-            }
-        }
-        const x = calculatedPoxY;
-        const y = calculatedPosX;
+        const x = (e.clientX - posX) / scale;
+        const y = (e.clientY - posY) / scale;
         return { x, y, floor };
     }
 
@@ -82,7 +64,8 @@ export default function MapControl({ cityMarks }: MapControlProps) {
             >
                 <AddNewMarkDialog getMousePosition={getMousePosition}>
                     <div style={style} ref={divRef}>
-                        {showNameCity && <ShowNameCity scale={scale} cityMarks={cityMarks} />}
+                        {showNameCity && <ShowMarkMap scale={scale} Marks={cityMarks} />}
+                        {showTrail && <ShowMarkMap scale={scale} Marks={trailMarks} />}
                     </div>
                     <div
                         className={
@@ -96,6 +79,13 @@ export default function MapControl({ cityMarks }: MapControlProps) {
                                 onClick={() => setShowNameCity(!showNameCity)}
                             >
                                 <Building />
+                            </Button>
+                            <Button
+                                variant={"outline"}
+                                size={"icon"}
+                                onClick={() => setShowTrail(!showTrail)}
+                            >
+                                <Coins />
                             </Button>
                         </MenuNavigation>
                     </div>

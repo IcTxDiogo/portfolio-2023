@@ -8,11 +8,14 @@ export type MapMarkers = NonNullable<
     inferAsyncReturnType<typeof api.pokebroMap.getCitiesMarkers.query>
 >;
 
+export const revalidate = 3600;
+
 export default async function Page() {
     const cityMarks = await api.pokebroMap.getCitiesMarkers.query();
+    const trailMarks = await api.pokebroMap.getTrailMarkers.query();
     return (
         <>
-            <MapControl cityMarks={cityMarks} />
+            <MapControl cityMarks={cityMarks} trailMarks={trailMarks} />
         </>
     );
 }

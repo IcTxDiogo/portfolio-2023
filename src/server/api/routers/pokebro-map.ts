@@ -12,7 +12,7 @@ export const pokebroMapRouter = createTRPCRouter({
                 posX: z.number(),
                 posY: z.number(),
                 floor: z.number(),
-                information: z.string().min(1),
+                information: z.string(),
                 type: z.string().min(1),
             }),
         )
@@ -30,6 +30,12 @@ export const pokebroMapRouter = createTRPCRouter({
     getCitiesMarkers: publicProcedure.query(({ ctx }) => {
         return ctx.db.query.pokebroMapMarker.findMany({
             where: (marker, { eq }) => eq(marker.type, "city-name"),
+        });
+    }),
+
+    getTrailMarkers: publicProcedure.query(({ ctx }) => {
+        return ctx.db.query.pokebroMapMarker.findMany({
+            where: (marker, { eq }) => eq(marker.type, "trilha"),
         });
     }),
 });
