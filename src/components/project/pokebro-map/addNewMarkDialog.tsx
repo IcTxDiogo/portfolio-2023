@@ -69,12 +69,12 @@ export default function AddNewMarkDialog({ children, getMousePosition }: addNewM
         <>
             <Dialog>
                 <ContextMenu>
-                    <ContextMenuTrigger>{children}</ContextMenuTrigger>
+                    <ContextMenuTrigger onContextMenu={(e) => handleMarkClick(e.nativeEvent)}>
+                        {children}
+                    </ContextMenuTrigger>
                     <ContextMenuContent>
                         <DialogTrigger asChild>
-                            <ContextMenuItem onClick={(e) => handleMarkClick(e.nativeEvent)}>
-                                New mark here
-                            </ContextMenuItem>
+                            <ContextMenuItem>New mark here</ContextMenuItem>
                         </DialogTrigger>
                     </ContextMenuContent>
                 </ContextMenu>
