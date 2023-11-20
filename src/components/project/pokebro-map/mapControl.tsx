@@ -45,32 +45,17 @@ export default function MapControl({ cityMarks, trailMarks }: MapControlProps) {
     }
 
     function getMousePosition(e: MouseEvent) {
-        console.log(e.clientX, e.clientY);
-        console.log(posX, posY);
-        console.log(scale);
-        console.log(e.clientX - posX, e.clientY - posY);
         const x = (e.clientX - posX) / scale;
         const y = (e.clientY - posY) / scale;
         return { x, y, floor };
     }
-
-    /*useEffect(() => {
-        addEventListener("mousemove", (e) => {
-            console.log(e.clientX, e.clientY);
-        });
-        return () => {
-            removeEventListener("mousemove", (e) => {
-                console.log(e.clientX, e.clientY);
-            });
-        };
-    });*/
 
     const style = getStyleOfDiv();
 
     return (
         <>
             <main
-                className={"pokebro-map h-screen overflow-x-hidden overflow-y-hidden bg-red-400"}
+                className={"pokebro-map h-screen overflow-x-hidden overflow-y-hidden bg-black"}
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}
                 onWheel={(e) => onZoom(e.nativeEvent)}
             >
