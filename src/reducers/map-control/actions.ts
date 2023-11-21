@@ -1,6 +1,6 @@
 import { type RefObject } from "react";
 
-const ZOOM_scale = 1.4;
+export const ZOOM_SCALE = 1.4;
 
 export const types = {
     SLIDE: "SLIDE",
@@ -38,7 +38,7 @@ export function zoom(e: WheelEvent, divRef: RefObject<HTMLDivElement>) {
         zoomIn: e.deltaY < 0,
         mouseX: e.clientX,
         mouseY: e.clientY,
-        zoomScale: ZOOM_scale,
+        zoomScale: ZOOM_SCALE,
         divRect: divRef.current.getBoundingClientRect(),
     };
 }

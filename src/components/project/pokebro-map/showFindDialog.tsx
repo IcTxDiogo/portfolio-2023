@@ -32,7 +32,7 @@ export default function ShowFindDialog({ cityMarks, handleSelectMarker }: ShowFi
     }, []);
 
     return (
-        <div onWheel={(e) => e.stopPropagation()}>
+        <div onWheel={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
             <CommandDialog open={findDialog} onOpenChange={setFindDialog}>
                 <CommandInput placeholder="Type a command or search..." />
                 <CommandList>
