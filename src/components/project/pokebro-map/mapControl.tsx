@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Building, Coins } from "lucide-react";
 
 import MenuNavigation from "@/components/project/pokebro-map/menuNavigation";
