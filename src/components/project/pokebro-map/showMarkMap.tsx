@@ -55,7 +55,7 @@ export default function ShowMarkMap({ scale, Marks }: ShowNameCityProps) {
                         textShadow: "0 0 10px black",
                     }}
                 >
-                    {item.type === "trilha" ? <MapPin /> : item.name}
+                    {item.type === "trails" ? <MapPin /> : item.name}
                 </div>
             ))}
         </>

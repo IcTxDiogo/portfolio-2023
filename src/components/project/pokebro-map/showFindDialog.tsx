@@ -18,6 +18,7 @@ type ShowFindDialogProps = {
 
 export default function ShowFindDialog({ cityMarks, handleSelectMarker }: ShowFindDialogProps) {
     const [findDialog, setFindDialog] = useState(false);
+    const [dialogSearchValue, setDialogSearchValue] = useState("");
 
     useEffect(() => {
         function down(e: KeyboardEvent) {
@@ -34,7 +35,11 @@ export default function ShowFindDialog({ cityMarks, handleSelectMarker }: ShowFi
     return (
         <div onWheel={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
             <CommandDialog open={findDialog} onOpenChange={setFindDialog}>
-                <CommandInput placeholder="Type a command or search..." />
+                <CommandInput
+                    placeholder="Type a command or search..."
+                    value={dialogSearchValue}
+                    onValueChange={setDialogSearchValue}
+                />
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
                     <CommandGroup heading="Cities">
