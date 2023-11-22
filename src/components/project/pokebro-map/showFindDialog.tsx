@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-    CommandDialog,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-} from "@/components/ui/command";
+
+import { CommandDialog, CommandInput } from "@/components/ui/command";
 import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
-import { Building } from "lucide-react";
+import ShowFindDialogList from "@/components/project/pokebro-map/showFindDialogList";
 
 type ShowFindDialogProps = {
     cityMarks: MapMarkers;
@@ -18,6 +11,7 @@ type ShowFindDialogProps = {
 
 export default function ShowFindDialog({ cityMarks, handleSelectMarker }: ShowFindDialogProps) {
     const [findDialog, setFindDialog] = useState(false);
+    const [dialogSearchValue, setDialogSearchValue] = useState("");
 
     useEffect(() => {
         function down(e: KeyboardEvent) {
@@ -33,26 +27,18 @@ export default function ShowFindDialog({ cityMarks, handleSelectMarker }: ShowFi
 
     return (
         <div onWheel={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
-            <CommandDialog open={findDialog} onOpenChange={setFindDialog}>
-                <CommandInput placeholder="Type a command or search..." />
-                <CommandList>
-                    <CommandEmpty>No results found.</CommandEmpty>
-                    <CommandGroup heading="Cities">
-                        {cityMarks.map((item, index) => (
-                            <CommandItem
-                                key={index}
-                                onSelect={() => {
-                                    handleSelectMarker(item.posX, item.posY, item.floor);
-                                    setFindDialog(false);
-                                }}
-                            >
-                                <Building />
-                                <span>{item.name}</span>
-                            </CommandItem>
-                        ))}
-                    </CommandGroup>
-                    <CommandSeparator />
-                </CommandList>
+            <CommandDialog open={findDialog} onOpenChange={setFindDialog} shouldFilter={false}>
+                <CommandInput
+                    placeholder="Type a command or search..."
+                    value={dialogSearchValue}
+                    onValueChange={setDialogSearchValue}
+                />
+                <ShowFindDialogList
+                    dialogSearchValue={dialogSearchValue}
+                    cityMarks={cityMarks}
+                    handleSelectMarker={handleSelectMarker}
+                    setFindDialog={setFindDialog}
+                />
             </CommandDialog>
         </div>
     );

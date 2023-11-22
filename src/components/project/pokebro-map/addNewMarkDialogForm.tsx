@@ -15,7 +15,7 @@ const formSchema = z.object({
     posX: z.coerce.number(),
     posY: z.coerce.number(),
     floor: z.coerce.number(),
-    information: z.string(),
+    information: z.string().includes("trails"),
     type: z.string(),
 });
 

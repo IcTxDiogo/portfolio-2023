@@ -35,7 +35,24 @@ export const pokebroMapRouter = createTRPCRouter({
 
     getTrailMarkers: publicProcedure.query(({ ctx }) => {
         return ctx.db.query.pokebroMapMarker.findMany({
-            where: (marker, { eq }) => eq(marker.type, "trilha"),
+            where: (marker, { eq }) => eq(marker.type, "trails"),
         });
     }),
+
+    markSearch: publicProcedure
+        .input(
+            z.object({
+                type: z.array(z.string()),
+                query: z.string(),
+            }),
+        )
+        .query(({ ctx, input }) => {
+            if (input.query.length < 3) return [];
+            return ctx.db.query.pokebroMapMarker.findMany({
+                where: (marker, { inArray, like }) => {
+                    return inArray(marker.type, input.type) && like(marker.name, input.query);
+                },
+                limit: 10,
+            });
+        }),
 });
