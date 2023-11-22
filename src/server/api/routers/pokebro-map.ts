@@ -52,6 +52,7 @@ export const pokebroMapRouter = createTRPCRouter({
                 where: (marker, { inArray, like }) => {
                     return inArray(marker.type, input.type) && like(marker.name, input.query);
                 },
+                limit: 10,
             });
         }),
 });
