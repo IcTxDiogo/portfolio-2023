@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Building, Coins } from "lucide-react";
 
 import MenuNavigation from "@/components/project/pokebro-map/menuNavigation";
@@ -12,11 +12,12 @@ import ShowFindDialog from "@/components/project/pokebro-map/showFindDialog";
 import AddNewMarkDialog from "@/components/project/pokebro-map/addNewMarkDialog";
 
 type MapControlProps = {
+    topNavigationItem: ReactNode;
     cityMarks: MapMarkers;
     trailMarks: MapMarkers;
 };
 
-export default function MapControl({ cityMarks, trailMarks }: MapControlProps) {
+export default function MapControl({ topNavigationItem, cityMarks, trailMarks }: MapControlProps) {
     const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker } = useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(true);
@@ -64,28 +65,23 @@ export default function MapControl({ cityMarks, trailMarks }: MapControlProps) {
                         {showNameCity && <ShowMarkMap scale={scale} Marks={cityMarks} />}
                         {showTrail && <ShowMarkMap scale={scale} Marks={trailMarks} />}
                     </div>
-                    <div
-                        className={
-                            "absolute inset-y-0 right-[20px] z-50 flex flex-col items-center justify-center gap-2 "
-                        }
-                    >
-                        <MenuNavigation floor={floor} setFloor={setFloor}>
-                            <Button
-                                variant={"outline"}
-                                size={"icon"}
-                                onClick={() => setShowNameCity(!showNameCity)}
-                            >
-                                <Building />
-                            </Button>
-                            <Button
-                                variant={"outline"}
-                                size={"icon"}
-                                onClick={() => setShowTrail(!showTrail)}
-                            >
-                                <Coins />
-                            </Button>
-                        </MenuNavigation>
-                    </div>
+                    <MenuNavigation floor={floor} setFloor={setFloor}>
+                        {topNavigationItem}
+                        <Button
+                            variant={"outline"}
+                            size={"icon"}
+                            onClick={() => setShowNameCity(!showNameCity)}
+                        >
+                            <Building />
+                        </Button>
+                        <Button
+                            variant={"outline"}
+                            size={"icon"}
+                            onClick={() => setShowTrail(!showTrail)}
+                        >
+                            <Coins />
+                        </Button>
+                    </MenuNavigation>
                     <ShowFindDialog cityMarks={cityMarks} handleSelectMarker={handleSelectMarker} />
                 </AddNewMarkDialog>
             </main>

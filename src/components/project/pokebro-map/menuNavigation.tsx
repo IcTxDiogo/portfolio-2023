@@ -62,32 +62,40 @@ export default function MenuNavigation({ floor, setFloor, children }: MenuNaviga
     ];
 
     return (
-        <NavigationMenu>
-            <NavigationMenuList
-                className={"flex max-w-fit flex-col items-center justify-center gap-2 space-x-0"}
-            >
-                {mapLinkItem.map((item, index) => (
-                    <NavigationMenuItem key={index}>
-                        <Link href={item.href}>
-                            <Button variant={"outline"} size={"icon"}>
+        <div
+            className={
+                "absolute inset-y-0 right-[20px] z-50 flex flex-col items-center justify-center gap-2 "
+            }
+        >
+            <NavigationMenu>
+                <NavigationMenuList
+                    className={
+                        "flex max-w-fit flex-col items-center justify-center gap-2 space-x-0"
+                    }
+                >
+                    {mapLinkItem.map((item, index) => (
+                        <NavigationMenuItem key={index}>
+                            <Link href={item.href}>
+                                <Button variant={"outline"} size={"icon"}>
+                                    {item.content}
+                                </Button>
+                            </Link>
+                        </NavigationMenuItem>
+                    ))}
+                    {mapNavigationItem.map((item, index) => (
+                        <NavigationMenuItem key={index}>
+                            <Button
+                                variant={"outline"}
+                                size={"icon"}
+                                onClick={() => controlFloor(item.parameter)}
+                            >
                                 {item.content}
                             </Button>
-                        </Link>
-                    </NavigationMenuItem>
-                ))}
-                {mapNavigationItem.map((item, index) => (
-                    <NavigationMenuItem key={index}>
-                        <Button
-                            variant={"outline"}
-                            size={"icon"}
-                            onClick={() => controlFloor(item.parameter)}
-                        >
-                            {item.content}
-                        </Button>
-                    </NavigationMenuItem>
-                ))}
-                {children}
-            </NavigationMenuList>
-        </NavigationMenu>
+                        </NavigationMenuItem>
+                    ))}
+                    {children}
+                </NavigationMenuList>
+            </NavigationMenu>
+        </div>
     );
 }
