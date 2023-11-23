@@ -5,6 +5,7 @@ import { getServerAuthSession } from "@/server/auth";
 import Link from "next/link";
 import { LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import UserSessionButton from "@/components/project/pokebro-map/userSessionButton";
 
 export const dynamic = "force-dynamic";
 
@@ -24,11 +25,7 @@ export default async function Page() {
                 cityMarks={cityMarks}
                 trailMarks={trailMarks}
                 topNavigationItem={
-                    <Link href={session ? "/api/auth/signout" : "/api/auth/signin"}>
-                        <Button variant={"outline"} size={"icon"}>
-                            {session ? <LogOut /> : <LogIn />}
-                        </Button>
-                    </Link>
+                    <UserSessionButton session={session} backUrl={"project/pokebro-map"} />
                 }
             />
         </>
