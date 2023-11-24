@@ -1,5 +1,6 @@
 import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import { MapPin } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ShowNameCityProps = {
     scale: number;
@@ -8,7 +9,7 @@ type ShowNameCityProps = {
 };
 
 function getTextClass(scale: number, type: string) {
-    if (type === "city-name") {
+    if (type === "city-name" || type === "tooltip") {
         if (scale > 13) {
             return "text-xs";
         }
@@ -58,7 +59,18 @@ export default function ShowMarkMap({ scale, Marks, actualFloor }: ShowNameCityP
                                 textShadow: "0 0 10px black",
                             }}
                         >
-                            {item.type === "trails" ? <MapPin /> : item.name}
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger>
+                                        {item.type === "trails" ? <MapPin /> : item.name}
+                                    </TooltipTrigger>
+                                    {item.type === "trails" && (
+                                        <TooltipContent className={getTextClass(scale, "tooltip")}>
+                                            {item.name}
+                                        </TooltipContent>
+                                    )}
+                                </Tooltip>
+                            </TooltipProvider>
                         </div>
                     ),
             )}
