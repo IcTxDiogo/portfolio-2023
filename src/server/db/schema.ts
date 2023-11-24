@@ -40,6 +40,7 @@ export const users = mysqlTable("user", {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     name: varchar("name", { length: 255 }),
     email: varchar("email", { length: 255 }).notNull(),
+    role: varchar("role", { length: 255 }).default("user").notNull(),
     emailVerified: timestamp("emailVerified", {
         mode: "date",
         fsp: 3,

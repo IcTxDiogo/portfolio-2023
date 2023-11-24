@@ -1,11 +1,7 @@
 import MapControl from "@/components/project/pokebro-map/mapControl";
-import { api } from "@/trpc/server";
 import { type inferAsyncReturnType } from "@trpc/server";
 import { getServerAuthSession } from "@/server/auth";
-import Link from "next/link";
-import { LogIn, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import UserSessionButton from "@/components/project/pokebro-map/userSessionButton";
+import { api } from "@/trpc/server";
 
 export const dynamic = "force-dynamic";
 
@@ -21,13 +17,7 @@ export default async function Page() {
     const session = await getServerAuthSession();
     return (
         <>
-            <MapControl
-                cityMarks={cityMarks}
-                trailMarks={trailMarks}
-                topNavigationItem={
-                    <UserSessionButton session={session} backUrl={"project/pokebro-map"} />
-                }
-            />
+            <MapControl cityMarks={cityMarks} trailMarks={trailMarks} session={session} />
         </>
     );
 }

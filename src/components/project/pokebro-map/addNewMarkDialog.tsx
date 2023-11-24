@@ -18,9 +18,14 @@ import AddNewMarkDialogForm from "@/components/project/pokebro-map/addNewMarkDia
 type addNewMarkDialogProps = {
     children: ReactNode;
     getMousePosition: (e: MouseEvent) => { x: number; y: number; floor: number };
+    userType?: string;
 };
 
-export default function AddNewMarkDialog({ children, getMousePosition }: addNewMarkDialogProps) {
+export default function AddNewMarkDialog({
+    children,
+    getMousePosition,
+    userType,
+}: addNewMarkDialogProps) {
     const [clickPosition, setClickPosition] = useState({ x: 0, y: 0, floor: 0 });
 
     function handleMarkClick(e: MouseEvent) {
@@ -36,9 +41,12 @@ export default function AddNewMarkDialog({ children, getMousePosition }: addNewM
                         {children}
                     </ContextMenuTrigger>
                     <ContextMenuContent>
-                        <DialogTrigger asChild>
-                            <ContextMenuItem>New mark here</ContextMenuItem>
-                        </DialogTrigger>
+                        {userType === "admin" && (
+                            <DialogTrigger asChild>
+                                <ContextMenuItem>New mark here</ContextMenuItem>
+                            </DialogTrigger>
+                        )}
+                        <ContextMenuItem>Help</ContextMenuItem>
                     </ContextMenuContent>
                 </ContextMenu>
                 <DialogContent

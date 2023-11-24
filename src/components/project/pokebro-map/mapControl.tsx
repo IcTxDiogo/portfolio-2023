@@ -1,8 +1,10 @@
 "use client";
 
-import { type ReactNode, useState } from "react";
 import { Building, Coins } from "lucide-react";
+import { type Session } from "next-auth";
+import { useState } from "react";
 
+import UserSessionButton from "@/components/project/pokebro-map/userSessionButton";
 import AddNewMarkDialog from "@/components/project/pokebro-map/addNewMarkDialog";
 import MenuNavigation from "@/components/project/pokebro-map/menuNavigation";
 import ShowFindDialog from "@/components/project/pokebro-map/showFindDialog";
@@ -12,12 +14,12 @@ import useMapControl from "@/reducers/map-control/useMapControl";
 import { Button } from "@/components/ui/button";
 
 type MapControlProps = {
-    topNavigationItem: ReactNode;
     cityMarks: MapMarkers;
     trailMarks: MapMarkers;
+    session: Session | null;
 };
 
-export default function MapControl({ topNavigationItem, cityMarks, trailMarks }: MapControlProps) {
+export default function MapControl({ cityMarks, trailMarks, session }: MapControlProps) {
     const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker } = useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(true);
@@ -60,13 +62,13 @@ export default function MapControl({ topNavigationItem, cityMarks, trailMarks }:
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}
                 onWheel={(e) => onZoom(e.nativeEvent)}
             >
-                <AddNewMarkDialog getMousePosition={getMousePosition}>
+                <AddNewMarkDialog getMousePosition={getMousePosition} userType={session?.user.role}>
                     <div style={style} ref={divRef}>
                         {showNameCity && <ShowMarkMap scale={scale} Marks={cityMarks} />}
                         {showTrail && <ShowMarkMap scale={scale} Marks={trailMarks} />}
                     </div>
                     <MenuNavigation floor={floor} setFloor={setFloor}>
-                        {topNavigationItem}
+                        <UserSessionButton session={session} />
                         <Button
                             variant={"outline"}
                             size={"icon"}

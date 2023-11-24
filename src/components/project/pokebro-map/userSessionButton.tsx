@@ -7,10 +7,9 @@ import { signIn, signOut } from "next-auth/react";
 
 type SignOutButtonProps = {
     session: Session | null;
-    backUrl: string;
 };
 
-export default function UserSessionButton({ session, backUrl }: SignOutButtonProps) {
+export default function UserSessionButton({ session }: SignOutButtonProps) {
     async function handleSesion() {
         if (session) {
             await signOut();
