@@ -45,6 +45,7 @@ export default function MapControl({ cityMarks, trailMarks, session }: MapContro
     function handleSelectMarker(x: number, y: number, floor: number) {
         setFloor(floor);
         selectMarker(x, y);
+        setShowTrail(true);
     }
 
     function getMousePosition(e: MouseEvent) {
@@ -64,8 +65,12 @@ export default function MapControl({ cityMarks, trailMarks, session }: MapContro
             >
                 <AddNewMarkDialog getMousePosition={getMousePosition} userType={session?.user.role}>
                     <div style={style} ref={divRef}>
-                        {showNameCity && <ShowMarkMap scale={scale} Marks={cityMarks} />}
-                        {showTrail && <ShowMarkMap scale={scale} Marks={trailMarks} />}
+                        {showNameCity && (
+                            <ShowMarkMap scale={scale} Marks={cityMarks} actualFloor={floor} />
+                        )}
+                        {showTrail && (
+                            <ShowMarkMap scale={scale} Marks={trailMarks} actualFloor={floor} />
+                        )}
                     </div>
                     <MenuNavigation floor={floor} setFloor={setFloor}>
                         <UserSessionButton session={session} />

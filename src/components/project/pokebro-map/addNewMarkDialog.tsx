@@ -46,7 +46,7 @@ export default function AddNewMarkDialog({
                                 <ContextMenuItem>New mark here</ContextMenuItem>
                             </DialogTrigger>
                         )}
-                        <ContextMenuItem>Help</ContextMenuItem>
+                        <ContextMenuItem>Version 0.4</ContextMenuItem>
                     </ContextMenuContent>
                 </ContextMenu>
                 <DialogContent

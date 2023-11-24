@@ -15,7 +15,7 @@ const formSchema = z.object({
     posX: z.coerce.number(),
     posY: z.coerce.number(),
     floor: z.coerce.number(),
-    information: z.string().includes("trails"),
+    information: z.string(),
     type: z.string(),
 });
 
@@ -32,7 +32,7 @@ export default function AddNewMarkDialogForm({ clickPosition }: AddNewMarkDialog
             posY: clickPosition.y,
             floor: clickPosition.floor,
             information: "",
-            type: "",
+            type: "trails",
         },
     });
     const markCreate = api.pokebroMap.createMarker.useMutation();
@@ -40,6 +40,7 @@ export default function AddNewMarkDialogForm({ clickPosition }: AddNewMarkDialog
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         markCreate.mutate(values);
+        console.log("teste");
         router.refresh();
     }
 

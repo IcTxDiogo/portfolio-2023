@@ -4,6 +4,7 @@ import { MapPin } from "lucide-react";
 type ShowNameCityProps = {
     scale: number;
     Marks: MapMarkers;
+    actualFloor: number;
 };
 
 function getTextClass(scale: number, type: string) {
@@ -36,28 +37,31 @@ function getTextClass(scale: number, type: string) {
     }
 }
 
-export default function ShowMarkMap({ scale, Marks }: ShowNameCityProps) {
+export default function ShowMarkMap({ scale, Marks, actualFloor }: ShowNameCityProps) {
     return (
         <>
-            {Marks.map((item, index) => (
-                <div
-                    key={index}
-                    className={`absolute z-50 ${getTextClass(
-                        scale,
-                        item.type,
-                    )} font-semibold text-white`}
-                    style={{
-                        left: `${item.posX}px`,
-                        top: `${item.posY}px`,
-                        transform: `translate(${
-                            item.type === "trilha" ? "-48%,-93%" : "-50%, -50%"
-                        })`,
-                        textShadow: "0 0 10px black",
-                    }}
-                >
-                    {item.type === "trails" ? <MapPin /> : item.name}
-                </div>
-            ))}
+            {Marks.map(
+                (item, index) =>
+                    actualFloor === item.floor && (
+                        <div
+                            key={index}
+                            className={`absolute z-50 ${getTextClass(
+                                scale,
+                                item.type,
+                            )} font-semibold text-white`}
+                            style={{
+                                left: `${item.posX}px`,
+                                top: `${item.posY}px`,
+                                transform: `translate(${
+                                    item.type === "trails" ? "-48%,-93%" : "-50%, -50%"
+                                })`,
+                                textShadow: "0 0 10px black",
+                            }}
+                        >
+                            {item.type === "trails" ? <MapPin /> : item.name}
+                        </div>
+                    ),
+            )}
         </>
     );
 }
