@@ -16,8 +16,7 @@ declare module "next-auth" {
     interface Session extends DefaultSession {
         user: {
             id: string;
-            // ...other properties
-            // role: UserRole;
+            role: string;
         } & DefaultSession["user"];
     }
 
@@ -34,13 +33,21 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
     callbacks: {
-        session: ({ session, user }) => ({
-            ...session,
-            user: {
-                ...session.user,
-                id: user.id,
-            },
-        }),
+        session: async ({ session, user }) => {
+            const loggedUserId = user?.id;
+            const userWithRole = await db.query.users.findFirst({
+                where: (user, { eq }) => eq(user.id, loggedUserId),
+            });
+            console.log(userWithRole);
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: loggedUserId,
+                    role: userWithRole?.role ?? "user",
+                },
+            };
+        },
     },
     adapter: DrizzleAdapter(db, mysqlTable),
     providers: [

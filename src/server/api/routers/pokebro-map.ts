@@ -49,8 +49,11 @@ export const pokebroMapRouter = createTRPCRouter({
         .query(({ ctx, input }) => {
             if (input.query.length < 3) return [];
             return ctx.db.query.pokebroMapMarker.findMany({
-                where: (marker, { inArray, like }) => {
-                    return inArray(marker.type, input.type) && like(marker.name, input.query);
+                where: (marker, { inArray, sql }) => {
+                    return (
+                        inArray(marker.type, input.type) &&
+                        sql`name LIKE ${"%" + input.query + "%"}`
+                    );
                 },
                 limit: 10,
             });

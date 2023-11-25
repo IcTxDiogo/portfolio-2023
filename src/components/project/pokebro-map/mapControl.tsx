@@ -1,22 +1,25 @@
 "use client";
 
-import { useState } from "react";
 import { Building, Coins } from "lucide-react";
+import { type Session } from "next-auth";
+import { useState } from "react";
 
+import UserSessionButton from "@/components/project/pokebro-map/userSessionButton";
+import AddNewMarkDialog from "@/components/project/pokebro-map/addNewMarkDialog";
 import MenuNavigation from "@/components/project/pokebro-map/menuNavigation";
+import ShowFindDialog from "@/components/project/pokebro-map/showFindDialog";
+import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import ShowMarkMap from "@/components/project/pokebro-map/showMarkMap";
 import useMapControl from "@/reducers/map-control/useMapControl";
 import { Button } from "@/components/ui/button";
-import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
-import ShowFindDialog from "@/components/project/pokebro-map/showFindDialog";
-import AddNewMarkDialog from "@/components/project/pokebro-map/addNewMarkDialog";
 
 type MapControlProps = {
     cityMarks: MapMarkers;
     trailMarks: MapMarkers;
+    session: Session | null;
 };
 
-export default function MapControl({ cityMarks, trailMarks }: MapControlProps) {
+export default function MapControl({ cityMarks, trailMarks, session }: MapControlProps) {
     const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker } = useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(true);
@@ -42,6 +45,7 @@ export default function MapControl({ cityMarks, trailMarks }: MapControlProps) {
     function handleSelectMarker(x: number, y: number, floor: number) {
         setFloor(floor);
         selectMarker(x, y);
+        setShowTrail(true);
     }
 
     function getMousePosition(e: MouseEvent) {
@@ -59,33 +63,32 @@ export default function MapControl({ cityMarks, trailMarks }: MapControlProps) {
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}
                 onWheel={(e) => onZoom(e.nativeEvent)}
             >
-                <AddNewMarkDialog getMousePosition={getMousePosition}>
+                <AddNewMarkDialog getMousePosition={getMousePosition} userType={session?.user.role}>
                     <div style={style} ref={divRef}>
-                        {showNameCity && <ShowMarkMap scale={scale} Marks={cityMarks} />}
-                        {showTrail && <ShowMarkMap scale={scale} Marks={trailMarks} />}
+                        {showNameCity && (
+                            <ShowMarkMap scale={scale} Marks={cityMarks} actualFloor={floor} />
+                        )}
+                        {showTrail && (
+                            <ShowMarkMap scale={scale} Marks={trailMarks} actualFloor={floor} />
+                        )}
                     </div>
-                    <div
-                        className={
-                            "absolute inset-y-0 right-[20px] z-50 flex flex-col items-center justify-center gap-2 "
-                        }
-                    >
-                        <MenuNavigation floor={floor} setFloor={setFloor}>
-                            <Button
-                                variant={"outline"}
-                                size={"icon"}
-                                onClick={() => setShowNameCity(!showNameCity)}
-                            >
-                                <Building />
-                            </Button>
-                            <Button
-                                variant={"outline"}
-                                size={"icon"}
-                                onClick={() => setShowTrail(!showTrail)}
-                            >
-                                <Coins />
-                            </Button>
-                        </MenuNavigation>
-                    </div>
+                    <MenuNavigation floor={floor} setFloor={setFloor}>
+                        <UserSessionButton session={session} />
+                        <Button
+                            variant={"outline"}
+                            size={"icon"}
+                            onClick={() => setShowNameCity(!showNameCity)}
+                        >
+                            <Building />
+                        </Button>
+                        <Button
+                            variant={"outline"}
+                            size={"icon"}
+                            onClick={() => setShowTrail(!showTrail)}
+                        >
+                            <Coins />
+                        </Button>
+                    </MenuNavigation>
                     <ShowFindDialog cityMarks={cityMarks} handleSelectMarker={handleSelectMarker} />
                 </AddNewMarkDialog>
             </main>

@@ -1,6 +1,6 @@
+import { pokebroMapRouter } from "@/server/api/routers/pokebro-map";
 import { postRouter } from "@/server/api/routers/post";
 import { createTRPCRouter } from "@/server/api/trpc";
-import { pokebroMapRouter } from "@/server/api/routers/pokebro-map";
 
 /**
  * This is the primary router for your server.
