@@ -1,10 +1,4 @@
-import {
-    CommandEmpty,
-    CommandGroup,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-} from "@/components/ui/command";
+import { CommandEmpty, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
 import { Building, Coins } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
