@@ -12,18 +12,23 @@ import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import ShowMarkMap from "@/components/project/pokebro-map/showMarkMap";
 import useMapControl from "@/reducers/map-control/useMapControl";
 import { Button } from "@/components/ui/button";
+import { api } from "@/trpc/react";
 
 type MapControlProps = {
-    cityMarks: MapMarkers;
-    trailMarks: MapMarkers;
     session: Session | null;
 };
 
-export default function MapControl({ cityMarks, trailMarks, session }: MapControlProps) {
-    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker } = useMapControl();
+export default function MapControl({ session }: MapControlProps) {
+    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker, maxZoom } =
+        useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(true);
     const [showTrail, setShowTrail] = useState(false);
+    const [trailMarks, setTrailMarks] = useState<MapMarkers>([]);
+    const cityMarks =
+        api.pokebroMap.getCitiesMarkers.useQuery(undefined, {
+            staleTime: Infinity,
+        }).data ?? [];
 
     function getStyleOfDiv() {
         let fileFloor = 7;
@@ -42,10 +47,14 @@ export default function MapControl({ cityMarks, trailMarks, session }: MapContro
         };
     }
 
-    function handleSelectMarker(x: number, y: number, floor: number) {
-        setFloor(floor);
-        selectMarker(x, y);
-        setShowTrail(true);
+    function handleSelectMarker(marker: MapMarkers[number]) {
+        if (marker.type === "trails") {
+            setTrailMarks((marks) => [...marks, marker]);
+            setShowTrail(true);
+            maxZoom();
+        }
+        setFloor(marker.floor);
+        selectMarker(marker.posX, marker.posY);
     }
 
     function getMousePosition(e: MouseEvent) {
@@ -89,7 +98,7 @@ export default function MapControl({ cityMarks, trailMarks, session }: MapContro
                             <Coins />
                         </Button>
                     </MenuNavigation>
-                    <ShowFindDialog cityMarks={cityMarks} handleSelectMarker={handleSelectMarker} />
+                    <ShowFindDialog handleSelectMarker={handleSelectMarker} />
                 </AddNewMarkDialog>
             </main>
         </>

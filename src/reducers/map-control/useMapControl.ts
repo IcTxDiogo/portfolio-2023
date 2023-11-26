@@ -1,9 +1,9 @@
 import { useRef, useReducer, useEffect } from "react";
-import { startSlide, sliding, zoom, goto, resize } from "./actions";
+import { startSlide, sliding, zoom, goto, resize, goToMaxZoom } from "./actions";
 import reducer, { initialState } from "./reducer";
 
-const MIN_ZOOM = -3;
-const MAX_ZOOM = 8;
+export const MIN_ZOOM = -3;
+export const MAX_ZOOM = 8;
 
 export default function useMapControl() {
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -52,11 +52,16 @@ export default function useMapControl() {
         dispatch(goto(x, y, divRef));
     }
 
+    function maxZoom() {
+        dispatch(goToMaxZoom());
+    }
+
     return {
         ...state,
         divRef,
         onMouseDown,
         onZoom,
         selectMarker,
+        maxZoom,
     };
 }
