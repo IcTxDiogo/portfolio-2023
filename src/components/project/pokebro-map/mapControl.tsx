@@ -15,15 +15,16 @@ import { Button } from "@/components/ui/button";
 
 type MapControlProps = {
     cityMarks: MapMarkers;
-    trailMarks: MapMarkers;
     session: Session | null;
 };
 
-export default function MapControl({ cityMarks, trailMarks, session }: MapControlProps) {
-    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker } = useMapControl();
+export default function MapControl({ cityMarks, session }: MapControlProps) {
+    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker, maxZoom } =
+        useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(true);
     const [showTrail, setShowTrail] = useState(false);
+    const [trailMarks, setTrailMarks] = useState<MapMarkers>([]);
 
     function getStyleOfDiv() {
         let fileFloor = 7;
@@ -42,10 +43,14 @@ export default function MapControl({ cityMarks, trailMarks, session }: MapContro
         };
     }
 
-    function handleSelectMarker(x: number, y: number, floor: number) {
-        setFloor(floor);
-        selectMarker(x, y);
-        setShowTrail(true);
+    function handleSelectMarker(marker: MapMarkers[number]) {
+        if (marker.type === "trails") {
+            setTrailMarks((marks) => [...marks, marker]);
+            setShowTrail(true);
+            maxZoom();
+        }
+        setFloor(marker.floor);
+        selectMarker(marker.posX, marker.posY);
     }
 
     function getMousePosition(e: MouseEvent) {

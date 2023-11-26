@@ -6,7 +6,7 @@ import ShowFindDialogList from "@/components/project/pokebro-map/showFindDialogL
 
 type ShowFindDialogProps = {
     cityMarks: MapMarkers;
-    handleSelectMarker: (x: number, y: number, floor: number) => void;
+    handleSelectMarker: (marker: MapMarkers[number]) => void;
 };
 
 export default function ShowFindDialog({ cityMarks, handleSelectMarker }: ShowFindDialogProps) {

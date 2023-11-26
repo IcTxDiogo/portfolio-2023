@@ -1,4 +1,5 @@
 import { type types } from "./actions";
+import { MAX_ZOOM } from "@/reducers/map-control/useMapControl";
 
 type Action = {
     type?: (typeof types)[keyof typeof types];
@@ -79,7 +80,19 @@ export default function reducer(state = initialState, action: Action) {
                 width: action.x,
                 height: action.y,
             };
-
+        case "GO_TO_MAX_ZOOM":
+            if (action.zoomScale === undefined) return state;
+            let localScaleHeight = state.scaleHeight;
+            let localScale = state.scale;
+            while (localScaleHeight < MAX_ZOOM - 2) {
+                localScaleHeight++;
+                localScale *= action.zoomScale;
+            }
+            return {
+                ...state,
+                scaleHeight: localScaleHeight,
+                scale: localScale,
+            };
         default:
             return state;
     }

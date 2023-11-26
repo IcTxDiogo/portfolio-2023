@@ -13,7 +13,7 @@ import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 type ShowFindDialogListProps = {
     dialogSearchValue: string;
     cityMarks: MapMarkers;
-    handleSelectMarker: (x: number, y: number, floor: number) => void;
+    handleSelectMarker: (marker: MapMarkers[number]) => void;
     setFindDialog: (open: boolean) => void;
 };
 
@@ -52,7 +52,7 @@ export default function ShowFindDialogList({
                     <CommandItem
                         key={mark.id}
                         onSelect={() => {
-                            handleSelectMarker(mark.posX, mark.posY, mark.floor);
+                            handleSelectMarker(mark);
                             setFindDialog(false);
                         }}
                     >
@@ -66,7 +66,7 @@ export default function ShowFindDialogList({
                         <CommandItem
                             key={index}
                             onSelect={() => {
-                                handleSelectMarker(item.posX, item.posY, item.floor);
+                                handleSelectMarker(item);
                                 setFindDialog(false);
                             }}
                         >

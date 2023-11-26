@@ -8,6 +8,7 @@ export const types = {
     ZOOM: "ZOOM",
     GOTO: "GOTO",
     RESIZE: "RESIZE",
+    GO_TO_MAX_ZOOM: "GO_TO_MAX_ZOOM",
 };
 
 export function startSlide(e: MouseEvent) {
@@ -57,5 +58,12 @@ export function resize(width: number, height: number) {
         type: types.RESIZE,
         x: width,
         y: height,
+    };
+}
+
+export function goToMaxZoom() {
+    return {
+        type: types.GO_TO_MAX_ZOOM,
+        zoomScale: ZOOM_SCALE,
     };
 }
