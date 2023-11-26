@@ -12,7 +12,6 @@ import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 
 type ShowFindDialogListProps = {
     dialogSearchValue: string;
-    cityMarks: MapMarkers;
     handleSelectMarker: (marker: MapMarkers[number]) => void;
     setFindDialog: (open: boolean) => void;
 };
@@ -20,15 +19,18 @@ type ShowFindDialogListProps = {
 export default function ShowFindDialogList({
     dialogSearchValue,
     handleSelectMarker,
-    cityMarks,
     setFindDialog,
 }: ShowFindDialogListProps) {
     const [debouncedSearchValue, setDebouncedSearchValue] = useState(dialogSearchValue);
-
-    const searchResult = api.pokebroMap.markSearch.useQuery({
-        query: debouncedSearchValue,
-        type: ["trials"],
-    });
+    const searchResult = api.pokebroMap.markSearch.useQuery(
+        {
+            query: debouncedSearchValue,
+            type: ["trials"],
+        },
+        {
+            enabled: debouncedSearchValue.length >= 3,
+        },
+    );
 
     useEffect(() => {
         const timerId = setTimeout(() => {
@@ -47,35 +49,21 @@ export default function ShowFindDialogList({
             <CommandEmpty>
                 {dialogSearchValue.length < 3 ? "type a less 3 character" : "No results found"}
             </CommandEmpty>
-            {result !== undefined && result.length > 0 ? (
-                result.map((mark) => (
-                    <CommandItem
-                        key={mark.id}
-                        onSelect={() => {
-                            handleSelectMarker(mark);
-                            setFindDialog(false);
-                        }}
-                    >
-                        <Coins />
+            {result?.map((mark) => (
+                <CommandItem
+                    key={mark.id}
+                    onSelect={() => {
+                        handleSelectMarker(mark);
+                        setFindDialog(false);
+                    }}
+                >
+                    <div className={"flex items-center justify-center gap-2"}>
+                        {mark.type === "city-name" ? <Building /> : <Coins />}
                         <span>{mark.name}</span>
-                    </CommandItem>
-                ))
-            ) : (
-                <CommandGroup heading="Cities">
-                    {cityMarks.map((item, index) => (
-                        <CommandItem
-                            key={index}
-                            onSelect={() => {
-                                handleSelectMarker(item);
-                                setFindDialog(false);
-                            }}
-                        >
-                            <Building />
-                            <span>{item.name}</span>
-                        </CommandItem>
-                    ))}
-                </CommandGroup>
-            )}
+                    </div>
+                </CommandItem>
+            ))}
+
             <CommandSeparator />
         </CommandList>
     );

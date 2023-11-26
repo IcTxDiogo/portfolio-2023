@@ -12,19 +12,23 @@ import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import ShowMarkMap from "@/components/project/pokebro-map/showMarkMap";
 import useMapControl from "@/reducers/map-control/useMapControl";
 import { Button } from "@/components/ui/button";
+import { api } from "@/trpc/react";
 
 type MapControlProps = {
-    cityMarks: MapMarkers;
     session: Session | null;
 };
 
-export default function MapControl({ cityMarks, session }: MapControlProps) {
+export default function MapControl({ session }: MapControlProps) {
     const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker, maxZoom } =
         useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(true);
     const [showTrail, setShowTrail] = useState(false);
     const [trailMarks, setTrailMarks] = useState<MapMarkers>([]);
+    const cityMarks =
+        api.pokebroMap.getCitiesMarkers.useQuery(undefined, {
+            staleTime: Infinity,
+        }).data ?? [];
 
     function getStyleOfDiv() {
         let fileFloor = 7;
@@ -94,7 +98,7 @@ export default function MapControl({ cityMarks, session }: MapControlProps) {
                             <Coins />
                         </Button>
                     </MenuNavigation>
-                    <ShowFindDialog cityMarks={cityMarks} handleSelectMarker={handleSelectMarker} />
+                    <ShowFindDialog handleSelectMarker={handleSelectMarker} />
                 </AddNewMarkDialog>
             </main>
         </>

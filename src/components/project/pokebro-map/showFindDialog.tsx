@@ -5,11 +5,10 @@ import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import ShowFindDialogList from "@/components/project/pokebro-map/showFindDialogList";
 
 type ShowFindDialogProps = {
-    cityMarks: MapMarkers;
     handleSelectMarker: (marker: MapMarkers[number]) => void;
 };
 
-export default function ShowFindDialog({ cityMarks, handleSelectMarker }: ShowFindDialogProps) {
+export default function ShowFindDialog({ handleSelectMarker }: ShowFindDialogProps) {
     const [findDialog, setFindDialog] = useState(false);
     const [dialogSearchValue, setDialogSearchValue] = useState("");
 
@@ -29,13 +28,12 @@ export default function ShowFindDialog({ cityMarks, handleSelectMarker }: ShowFi
         <div onWheel={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
             <CommandDialog open={findDialog} onOpenChange={setFindDialog} shouldFilter={false}>
                 <CommandInput
-                    placeholder="Type a command or search..."
+                    placeholder="Type a search..."
                     value={dialogSearchValue}
                     onValueChange={setDialogSearchValue}
                 />
                 <ShowFindDialogList
                     dialogSearchValue={dialogSearchValue}
-                    cityMarks={cityMarks}
                     handleSelectMarker={handleSelectMarker}
                     setFindDialog={setFindDialog}
                 />
