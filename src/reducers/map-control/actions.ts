@@ -1,8 +1,9 @@
-import { type RefObject } from "react";
+import { type Action } from "@/reducers/map-control/reducer";
 
 export const ZOOM_SCALE = 1.4;
 
 export const types = {
+    BASE_ACTION: "BASE_ACTION",
     SLIDE: "SLIDE",
     SLIDE_START: "SLIDE_START",
     ZOOM: "ZOOM",
@@ -11,58 +12,71 @@ export const types = {
     GO_TO_MAX_ZOOM: "GO_TO_MAX_ZOOM",
 };
 
-export function startSlide(e: MouseEvent) {
+const baseAction: Action = {
+    type: types.BASE_ACTION,
+    mouseX: 0,
+    mouseY: 0,
+    zoomIn: false,
+    zoomScale: 0,
+    divRect: null as unknown as DOMRect,
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+};
+
+export function startSlide(mouseX: number, mouseY: number) {
     return {
+        ...baseAction,
         type: types.SLIDE_START,
-        mouseX: e.clientX,
-        mouseY: e.clientY,
+        mouseX,
+        mouseY,
     };
 }
 
-export function sliding(e: MouseEvent) {
+export function sliding(mouseX: number, mouseY: number) {
     return {
+        ...baseAction,
         type: types.SLIDE,
-        mouseX: e.clientX,
-        mouseY: e.clientY,
+        mouseX,
+        mouseY,
     };
 }
 
-export function zoom(e: WheelEvent, divRef: RefObject<HTMLDivElement>) {
-    if (!divRef.current) {
-        return {
-            type: types.ZOOM,
-            divRect: undefined,
-        };
-    }
+export function zoom(mouseX: number, mouseY: number, zoomIn: boolean, divRect: DOMRect) {
     return {
+        ...baseAction,
         type: types.ZOOM,
-        zoomIn: e.deltaY < 0,
-        mouseX: e.clientX,
-        mouseY: e.clientY,
         zoomScale: ZOOM_SCALE,
-        divRect: divRef.current.getBoundingClientRect(),
+        mouseX,
+        mouseY,
+        zoomIn,
+        divRect,
     };
 }
 
-export function goto(x: number, y: number, divRef: RefObject<HTMLDivElement>) {
+export function goto(x: number, y: number, divRect: DOMRect) {
     return {
+        ...baseAction,
         type: types.GOTO,
         x,
         y,
-        divRect: divRef.current?.getBoundingClientRect(),
+        divRect,
     };
 }
 
 export function resize(width: number, height: number) {
     return {
+        ...baseAction,
         type: types.RESIZE,
-        x: width,
-        y: height,
+        width,
+        height,
     };
 }
 
 export function goToMaxZoom() {
     return {
+        ...baseAction,
         type: types.GO_TO_MAX_ZOOM,
         zoomScale: ZOOM_SCALE,
     };

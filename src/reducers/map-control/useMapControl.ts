@@ -1,4 +1,4 @@
-import { useRef, useReducer, useEffect } from "react";
+import { useRef, useReducer, useEffect, type RefObject } from "react";
 import { startSlide, sliding, zoom, goto, resize, goToMaxZoom } from "./actions";
 import reducer, { initialState } from "./reducer";
 
@@ -10,22 +10,22 @@ export default function useMapControl() {
     const divRef = useRef(null);
 
     useEffect(() => {
-        dispatch(resize(window.innerWidth, window.innerHeight));
-
-        window.addEventListener("resize", () => {
+        function onResize() {
             dispatch(resize(window.innerWidth, window.innerHeight));
-        });
+        }
+
+        onResize();
+
+        window.addEventListener("resize", onResize);
 
         return () => {
-            window.removeEventListener("resize", () => {
-                dispatch(resize(window.innerWidth, window.innerHeight));
-            });
+            window.removeEventListener("resize", onResize);
         };
     }, []);
 
     function onMouseDown(e: MouseEvent) {
         e.preventDefault();
-        dispatch(startSlide(e));
+        dispatch(startSlide(e.clientX, e.clientY));
         window.addEventListener("mouseup", onMouseUp);
         window.addEventListener("mousemove", onSlide);
     }
@@ -36,7 +36,7 @@ export default function useMapControl() {
     }
 
     function onSlide(e: MouseEvent) {
-        dispatch(sliding(e));
+        dispatch(sliding(e.clientX, e.clientY));
     }
 
     function onZoom(e: WheelEvent) {
@@ -44,16 +44,26 @@ export default function useMapControl() {
             (state.scaleHeight > MIN_ZOOM && e.deltaY > 0) ||
             (state.scaleHeight < MAX_ZOOM && e.deltaY < 0)
         ) {
-            dispatch(zoom(e, divRef));
+            const divRect = getDivRect();
+            if (!divRect) return;
+            dispatch(zoom(e.clientX, e.clientY, e.deltaY < 0, divRect));
         }
     }
 
     function selectMarker(x: number, y: number) {
-        dispatch(goto(x, y, divRef));
+        const divRect = getDivRect();
+        if (!divRect) return;
+        dispatch(goto(x, y, divRect));
     }
 
     function maxZoom() {
         dispatch(goToMaxZoom());
+    }
+
+    function getDivRect() {
+        if (!divRef.current) return undefined;
+        const divRect: RefObject<HTMLDivElement> = divRef;
+        return divRect.current?.getBoundingClientRect();
     }
 
     return {
