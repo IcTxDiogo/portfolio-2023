@@ -1,9 +1,30 @@
 import { useRef, useReducer, useEffect, type RefObject } from "react";
-import { startSlide, sliding, zoom, goto, resize, goToMaxZoom } from "./actions";
-import reducer, { initialState } from "./reducer";
+import {
+    startSlide,
+    sliding,
+    zoom,
+    goto,
+    resize,
+    goToMaxZoom,
+    touchStart,
+    touchMove,
+    touchZoom,
+} from "./actions";
+import reducer from "./reducer";
 
 export const MIN_ZOOM = -3;
 export const MAX_ZOOM = 8;
+
+export const initialState = {
+    posX: 0,
+    posY: 0,
+    oldPosX: 0,
+    oldPosY: 0,
+    scale: 1,
+    scaleHeight: 0,
+    width: 0,
+    height: 0,
+};
 
 export default function useMapControl() {
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -64,6 +85,59 @@ export default function useMapControl() {
         if (!divRef.current) return undefined;
         const divRect: RefObject<HTMLDivElement> = divRef;
         return divRect.current?.getBoundingClientRect();
+    }
+
+    let initialTouchDistance: number | null = null;
+
+    function onTouchStart(e: TouchEvent) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        if (!touch) return;
+        if (e.touches.length === 2) {
+            const touchOne = e.touches[0];
+            const touchTwo = e.touches[1];
+            if (!touchOne || !touchTwo) return;
+            initialTouchDistance = Math.sqrt(
+                (touchOne.clientX - touchTwo.clientX) ** 2 +
+                    (touchOne.clientY - touchTwo.clientY) ** 2,
+            );
+        }
+        dispatch(touchStart({ x: touch.clientX, y: touch.clientY }));
+        window.addEventListener("touchend", onTouchEnd);
+        window.addEventListener("touchmove", onTouchMove);
+    }
+
+    function onTouchEnd() {
+        window.removeEventListener("touchend", onTouchEnd);
+        window.removeEventListener("touchmove", onTouchMove);
+    }
+
+    function onTouchMove(e: TouchEvent) {
+        //verify have two touches else one touch is a slide
+        if (e.touches.length === 2) {
+            const touchOne = e.touches[0];
+            const touchTwo = e.touches[1];
+            if (!touchOne || !touchTwo || initialTouchDistance === null) return;
+            const currentTouchDistance = Math.hypot(
+                touchTwo.clientX - touchOne.clientX,
+                touchTwo.clientY - touchOne.clientY,
+            );
+            if (currentTouchDistance !== initialTouchDistance) {
+                dispatch(
+                    touchZoom(
+                        { x: touchOne.clientX, y: touchOne.clientY },
+                        { x: touchTwo.clientX, y: touchTwo.clientY },
+                        currentTouchDistance > initialTouchDistance,
+                    ),
+                );
+            }
+        }
+        //one touch is a slide
+        else {
+            const touch = e.touches[0];
+            if (!touch) return;
+            dispatch(touchMove({ x: touch.clientX, y: touch.clientY }));
+        }
     }
 
     return {

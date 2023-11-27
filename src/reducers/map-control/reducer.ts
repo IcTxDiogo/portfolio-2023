@@ -1,29 +1,5 @@
-import { type types } from "./actions";
-import { MAX_ZOOM } from "@/reducers/map-control/useMapControl";
-
-export type Action = {
-    type: (typeof types)[keyof typeof types];
-    mouseX: number;
-    mouseY: number;
-    zoomIn: boolean;
-    zoomScale: number;
-    divRect: DOMRect;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-};
-
-export const initialState = {
-    posX: 0,
-    posY: 0,
-    oldPosX: 0,
-    oldPosY: 0,
-    scale: 1,
-    scaleHeight: 0,
-    width: 0,
-    height: 0,
-};
+import { initialState, MAX_ZOOM } from "@/reducers/map-control/useMapControl";
+import { type Action } from "@/reducers/map-control/actions";
 
 export default function reducer(state = initialState, action: Action) {
     switch (action.type) {
