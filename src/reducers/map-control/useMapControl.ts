@@ -1,4 +1,4 @@
-import { useRef, useReducer, useEffect, type RefObject } from "react";
+import { useRef, useReducer, useEffect, type RefObject, useState } from "react";
 import {
     startSlide,
     sliding,
@@ -28,6 +28,7 @@ export const initialState = {
 
 export default function useMapControl() {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const [isLoaded, setIsLoaded] = useState(false);
     const divRef = useRef(null);
 
     useEffect(() => {
@@ -42,6 +43,13 @@ export default function useMapControl() {
         return () => {
             window.removeEventListener("resize", onResize);
         };
+    }, []);
+
+    useEffect(() => {
+        const divRect = getDivRect();
+        if (!divRect) return;
+        dispatch(goto(divRect.width / 2, divRect.height / 2, divRect));
+        setIsLoaded(true);
     }, []);
 
     function onMouseDown(e: MouseEvent) {
@@ -115,6 +123,7 @@ export default function useMapControl() {
     return {
         ...state,
         divRef,
+        isLoaded,
         onMouseDown,
         onZoom,
         selectMarker,
