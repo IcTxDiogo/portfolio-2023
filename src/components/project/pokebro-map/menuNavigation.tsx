@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Home } from "lucide-react";
+import { ArrowDown, ArrowUp, Home, Minus, Plus } from "lucide-react";
 import { type ReactNode } from "react";
 import {
     NavigationMenu,
@@ -11,12 +11,15 @@ import Link from "next/link";
 type MenuNavigationProps = {
     floor: number;
     setFloor: (floor: number) => void;
+    doZoom: (zoomIn: boolean) => void;
     children?: ReactNode;
 };
 
+type Action = "up" | "down" | "7" | "in" | "out";
+
 type MapNavigationItem = {
     content: ReactNode;
-    parameter: "up" | "down" | "7";
+    parameter: Action;
 };
 
 type MapLinkItem = {
@@ -24,8 +27,8 @@ type MapLinkItem = {
     href: string;
 };
 
-export default function MenuNavigation({ floor, setFloor, children }: MenuNavigationProps) {
-    function controlFloor(action: "up" | "down" | "7") {
+export default function MenuNavigation({ floor, setFloor, doZoom, children }: MenuNavigationProps) {
+    function controlFloor(action: Action) {
         if (action === "up") {
             if (floor < 15) {
                 setFloor(floor + 1);
@@ -34,12 +37,22 @@ export default function MenuNavigation({ floor, setFloor, children }: MenuNaviga
             if (floor > 0) {
                 setFloor(floor - 1);
             }
+        } else if (action === "in") {
+            console.log("in");
+            doZoom(true);
+        } else if (action === "out") {
+            console.log("out");
+            doZoom(false);
         } else {
             setFloor(7);
         }
     }
 
     const mapNavigationItem: MapNavigationItem[] = [
+        {
+            content: <Plus />,
+            parameter: "in",
+        },
         {
             content: <ArrowUp />,
             parameter: "up",
@@ -51,6 +64,10 @@ export default function MenuNavigation({ floor, setFloor, children }: MenuNaviga
         {
             content: <ArrowDown />,
             parameter: "down",
+        },
+        {
+            content: <Minus />,
+            parameter: "out",
         },
     ];
 

@@ -8,7 +8,7 @@ import {
     goToMaxZoom,
     touchStart,
     touchMove,
-    touchZoom,
+    buttonZoom,
 } from "./actions";
 import reducer from "./reducer";
 
@@ -87,20 +87,9 @@ export default function useMapControl() {
         return divRect.current?.getBoundingClientRect();
     }
 
-    let initialTouchDistance: number | null = null;
-
     function onTouchStart(e: TouchEvent) {
         const touch = e.touches[0];
         if (!touch) return;
-        if (e.touches.length === 2) {
-            const touchOne = e.touches[0];
-            const touchTwo = e.touches[1];
-            if (!touchOne || !touchTwo) return;
-            initialTouchDistance = Math.sqrt(
-                (touchOne.clientX - touchTwo.clientX) ** 2 +
-                    (touchOne.clientY - touchTwo.clientY) ** 2,
-            );
-        }
         dispatch(touchStart({ x: touch.clientX, y: touch.clientY }));
         window.addEventListener("touchend", onTouchEnd);
         window.addEventListener("touchmove", onTouchMove);
@@ -112,31 +101,15 @@ export default function useMapControl() {
     }
 
     function onTouchMove(e: TouchEvent) {
-        //verify have two touches else one touch is a slide
-        if (e.touches.length === 2) {
-            const touchOne = e.touches[0];
-            const touchTwo = e.touches[1];
-            if (!touchOne || !touchTwo || initialTouchDistance === null) return;
-            const currentTouchDistance = Math.hypot(
-                touchTwo.clientX - touchOne.clientX,
-                touchTwo.clientY - touchOne.clientY,
-            );
-            if (currentTouchDistance !== initialTouchDistance) {
-                dispatch(
-                    touchZoom(
-                        { x: touchOne.clientX, y: touchOne.clientY },
-                        { x: touchTwo.clientX, y: touchTwo.clientY },
-                        currentTouchDistance > initialTouchDistance,
-                    ),
-                );
-            }
-        }
-        //one touch is a slide
-        else {
-            const touch = e.touches[0];
-            if (!touch) return;
-            dispatch(touchMove({ x: touch.clientX, y: touch.clientY }));
-        }
+        const touch = e.touches[0];
+        if (!touch) return;
+        dispatch(touchMove({ x: touch.clientX, y: touch.clientY }));
+    }
+
+    function doZoom(zoomIn: boolean) {
+        const divRect = getDivRect();
+        if (!divRect) return;
+        dispatch(buttonZoom(zoomIn, divRect));
     }
 
     return {
@@ -147,5 +120,6 @@ export default function useMapControl() {
         selectMarker,
         maxZoom,
         onTouchStart,
+        doZoom,
     };
 }

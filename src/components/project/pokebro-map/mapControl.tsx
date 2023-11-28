@@ -19,8 +19,18 @@ type MapControlProps = {
 };
 
 export default function MapControl({ session }: MapControlProps) {
-    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker, maxZoom, onTouchStart } =
-        useMapControl();
+    const {
+        posX,
+        posY,
+        scale,
+        divRef,
+        onMouseDown,
+        onZoom,
+        selectMarker,
+        maxZoom,
+        onTouchStart,
+        doZoom,
+    } = useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(true);
     const [showTrail, setShowTrail] = useState(false);
@@ -82,7 +92,7 @@ export default function MapControl({ session }: MapControlProps) {
                             <ShowMarkMap scale={scale} Marks={trailMarks} actualFloor={floor} />
                         )}
                     </div>
-                    <MenuNavigation floor={floor} setFloor={setFloor}>
+                    <MenuNavigation floor={floor} setFloor={setFloor} doZoom={doZoom}>
                         <UserSessionButton session={session} />
                         <Button
                             variant={"outline"}

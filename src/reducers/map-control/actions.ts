@@ -10,7 +10,7 @@ export const Types = {
     GO_TO_MAX_ZOOM: "GO_TO_MAX_ZOOM",
     TOUCH_START: "TOUCH_START",
     TOUCH_MOVE: "TOUCH_MOVE",
-    TOUCH_ZOOM: "TOUCH_ZOOM",
+    DO_ZOOM: "DO_ZOOM",
 };
 
 export type Action = {
@@ -25,7 +25,6 @@ export type Action = {
     width: number;
     height: number;
     touchOne: Touch;
-    touchTwo: Touch;
 };
 
 const baseAction: Action = {
@@ -33,14 +32,13 @@ const baseAction: Action = {
     mouseX: 0,
     mouseY: 0,
     zoomIn: false,
-    zoomScale: 0,
+    zoomScale: ZOOM_SCALE,
     divRect: null as unknown as DOMRect,
     x: 0,
     y: 0,
     width: 0,
     height: 0,
     touchOne: { x: 0, y: 0 },
-    touchTwo: { x: 0, y: 0 },
 };
 
 export type Touch = {
@@ -70,7 +68,6 @@ export function zoom(mouseX: number, mouseY: number, zoomIn: boolean, divRect: D
     return {
         ...baseAction,
         type: Types.ZOOM,
-        zoomScale: ZOOM_SCALE,
         mouseX,
         mouseY,
         zoomIn,
@@ -121,12 +118,11 @@ export function touchMove(touchOne: Touch) {
     };
 }
 
-export function touchZoom(touchOne: Touch, touchTwo: Touch, zoomIn: boolean) {
+export function buttonZoom(zoomIn: boolean, divRect: DOMRect) {
     return {
         ...baseAction,
-        type: Types.TOUCH_ZOOM,
-        touchOne,
-        touchTwo,
+        type: Types.DO_ZOOM,
+        divRect,
         zoomIn,
     };
 }
