@@ -90,7 +90,6 @@ export default function useMapControl() {
     let initialTouchDistance: number | null = null;
 
     function onTouchStart(e: TouchEvent) {
-        e.preventDefault();
         const touch = e.touches[0];
         if (!touch) return;
         if (e.touches.length === 2) {
@@ -147,5 +146,6 @@ export default function useMapControl() {
         onZoom,
         selectMarker,
         maxZoom,
+        onTouchStart,
     };
 }

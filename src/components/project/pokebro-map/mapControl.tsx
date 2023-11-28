@@ -19,7 +19,7 @@ type MapControlProps = {
 };
 
 export default function MapControl({ session }: MapControlProps) {
-    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker, maxZoom } =
+    const { posX, posY, scale, divRef, onMouseDown, onZoom, selectMarker, maxZoom, onTouchStart } =
         useMapControl();
     const [floor, setFloor] = useState(7);
     const [showNameCity, setShowNameCity] = useState(true);
@@ -68,9 +68,10 @@ export default function MapControl({ session }: MapControlProps) {
     return (
         <>
             <main
-                className={"pokebro-map h-screen overflow-x-hidden overflow-y-hidden bg-black"}
+                className={"pokebro-map h-[100vh] overflow-x-hidden overflow-y-hidden bg-black"}
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}
                 onWheel={(e) => onZoom(e.nativeEvent)}
+                onTouchStart={(e) => onTouchStart(e.nativeEvent)}
             >
                 <AddNewMarkDialog getMousePosition={getMousePosition} userType={session?.user.role}>
                     <div style={style} ref={divRef}>

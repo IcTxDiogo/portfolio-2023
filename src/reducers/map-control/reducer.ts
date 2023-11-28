@@ -69,6 +69,40 @@ export default function reducer(state = initialState, action: Action) {
                 scaleHeight: localScaleHeight,
                 scale: localScale,
             };
+        case "TOUCH_START":
+            return {
+                ...state,
+                oldPosX: action.touchOne.x,
+                oldPosY: action.touchOne.y,
+            };
+        case "TOUCH_MOVE":
+            return {
+                ...state,
+                posX: state.posX + action.touchOne.x - state.oldPosX,
+                posY: state.posY + action.touchOne.y - state.oldPosY,
+                oldPosX: action.touchOne.x,
+                oldPosY: action.touchOne.y,
+            };
+        case "TOUCH_ZOOM":
+            //calculates a new zoom scale based on zoomIn
+            const newTouchZoomScale = action.zoomIn
+                ? state.scale * action.zoomScale
+                : state.scale / action.zoomScale;
+            //increment or decrement the scaleHeight based on zoomIn
+            const newTouchScaleHeight = state.scaleHeight + (action.zoomIn ? 1 : -1);
+            // Calculate the midpoint between the two touch points
+            const midX = (action.touchOne.x + action.touchTwo.x) / 2;
+            const midY = (action.touchOne.y + action.touchTwo.y) / 2;
+            //calculate the new offset based on touch position
+            const newTouchPosX = state.posX + midX - midX * (newTouchZoomScale / state.scale);
+            const newTouchPosY = state.posY + midY - midY * (newTouchZoomScale / state.scale);
+            return {
+                ...state,
+                scale: newTouchZoomScale,
+                posX: newTouchPosX,
+                posY: newTouchPosY,
+                scaleHeight: newTouchScaleHeight,
+            };
         default:
             return state;
     }
