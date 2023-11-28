@@ -1,43 +1,21 @@
-import { type types } from "./actions";
-import { MAX_ZOOM } from "@/reducers/map-control/useMapControl";
-
-export type Action = {
-    type: (typeof types)[keyof typeof types];
-    mouseX: number;
-    mouseY: number;
-    zoomIn: boolean;
-    zoomScale: number;
-    divRect: DOMRect;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-};
-
-export const initialState = {
-    posX: 0,
-    posY: 0,
-    oldPosX: 0,
-    oldPosY: 0,
-    scale: 1,
-    scaleHeight: 0,
-    width: 0,
-    height: 0,
-};
+import { initialState, MAX_ZOOM } from "@/reducers/map-control/useMapControl";
+import { type Action } from "@/reducers/map-control/actions";
 
 export default function reducer(state = initialState, action: Action) {
     switch (action.type) {
-        case "BASE_ACTION":
+        case "BASE_ACTION": {
             return {
                 ...state,
             };
-        case "SLIDE_START":
+        }
+        case "SLIDE_START": {
             return {
                 ...state,
                 oldPosX: action.mouseX,
                 oldPosY: action.mouseY,
             };
-        case "SLIDE":
+        }
+        case "SLIDE": {
             return {
                 ...state,
                 posX: state.posX + action.mouseX - state.oldPosX,
@@ -45,54 +23,93 @@ export default function reducer(state = initialState, action: Action) {
                 oldPosX: action.mouseX,
                 oldPosY: action.mouseY,
             };
-        case "ZOOM":
+        }
+        case "ZOOM": {
             //calculates a new zoom scale based on zoomIn
-            const newZoomScale = action.zoomIn
+            const scale = action.zoomIn
                 ? state.scale * action.zoomScale
                 : state.scale / action.zoomScale;
             //increment or decrement the scaleHeight based on zoomIn
-            const newScaleHeight = state.scaleHeight + (action.zoomIn ? 1 : -1);
+            const scaleHeight = state.scaleHeight + (action.zoomIn ? 1 : -1);
             //calculate the position of the mouse relative to the div
             const x = action.mouseX - action.divRect.left;
             const y = action.mouseY - action.divRect.top;
             //calculate the new offset based on mouse position
-            const newPosX = state.posX + x - x * (newZoomScale / state.scale);
-            const newPosY = state.posY + y - y * (newZoomScale / state.scale);
+            const posX = state.posX + x - x * (scale / state.scale);
+            const posY = state.posY + y - y * (scale / state.scale);
             return {
                 ...state,
-                scale: newZoomScale,
-                posX: newPosX,
-                posY: newPosY,
-                scaleHeight: newScaleHeight,
+                scale,
+                posX,
+                posY,
+                scaleHeight,
             };
-        case "GOTO":
-            //calculate the new offset to center the x,y position on center of the screen
-            const newGotoPosX = state.width / 2 - action.x * state.scale;
-            const newGotoPosY = state.height / 2 - action.y * state.scale;
-
+        }
+        case "GOTO": {
             return {
                 ...state,
-                posX: newGotoPosX,
-                posY: newGotoPosY,
+                posX: state.width / 2 - action.x * state.scale,
+                posY: state.height / 2 - action.y * state.scale,
             };
-        case "RESIZE":
+        }
+        case "RESIZE": {
             return {
                 ...state,
                 width: action.width,
                 height: action.height,
             };
-        case "GO_TO_MAX_ZOOM":
-            let localScaleHeight = state.scaleHeight;
-            let localScale = state.scale;
-            while (localScaleHeight < MAX_ZOOM - 2) {
-                localScaleHeight++;
-                localScale *= action.zoomScale;
+        }
+        case "GO_TO_MAX_ZOOM": {
+            let scaleHeight = state.scaleHeight;
+            let scale = state.scale;
+            while (scaleHeight < MAX_ZOOM - 2) {
+                scaleHeight++;
+                scale *= action.zoomScale;
             }
             return {
                 ...state,
-                scaleHeight: localScaleHeight,
-                scale: localScale,
+                scaleHeight,
+                scale,
             };
+        }
+        case "TOUCH_START": {
+            return {
+                ...state,
+                oldPosX: action.touchOne.x,
+                oldPosY: action.touchOne.y,
+            };
+        }
+        case "TOUCH_MOVE": {
+            return {
+                ...state,
+                posX: state.posX + action.touchOne.x - state.oldPosX,
+                posY: state.posY + action.touchOne.y - state.oldPosY,
+                oldPosX: action.touchOne.x,
+                oldPosY: action.touchOne.y,
+            };
+        }
+        case "DO_ZOOM": {
+            //calculates a new zoom scale based on zoomIn
+            const scale = action.zoomIn
+                ? state.scale * action.zoomScale
+                : state.scale / action.zoomScale;
+            //increment or decrement the scaleHeight based on zoomIn
+            const scaleHeight = state.scaleHeight + (action.zoomIn ? 1 : -1);
+            // Calculate the center of the screen to keep it in the same place
+            const centerX = window.innerWidth / 2 - action.divRect.left;
+            const centerY = window.innerHeight / 2 - action.divRect.top;
+            //calculate the new offset based in the center of the screen
+            const posX = state.posX + centerX - centerX * (scale / state.scale);
+            const posY = state.posY + centerY - centerY * (scale / state.scale);
+            return {
+                ...state,
+                scale,
+                posX,
+                posY,
+                scaleHeight,
+            };
+        }
+
         default:
             return state;
     }
