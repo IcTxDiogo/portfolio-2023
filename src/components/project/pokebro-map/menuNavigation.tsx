@@ -22,11 +22,13 @@ type Action = "up" | "down" | "7" | "in" | "out" | "search";
 type MapNavigationItem = {
     content: ReactNode;
     parameter: Action;
+    name: string;
 };
 
 type MapLinkItem = {
     content: ReactNode;
     href: string;
+    name: string;
 };
 
 export default function MenuNavigation({
@@ -61,26 +63,32 @@ export default function MenuNavigation({
         {
             content: <Plus />,
             parameter: "in",
+            name: "Zoom in",
         },
         {
             content: <ArrowUp />,
             parameter: "up",
+            name: "Up floor",
         },
         {
             content: floor,
             parameter: "7",
+            name: `Actual floor ${floor}`,
         },
         {
             content: <ArrowDown />,
             parameter: "down",
+            name: "Down floor",
         },
         {
             content: <Minus />,
             parameter: "out",
+            name: "Zoom out",
         },
         {
             content: <Keyboard />,
             parameter: "search",
+            name: "Search",
         },
     ];
 
@@ -88,6 +96,7 @@ export default function MenuNavigation({
         {
             content: <Home />,
             href: "/projects",
+            name: "Back to projects",
         },
     ];
 
@@ -106,7 +115,7 @@ export default function MenuNavigation({
                     {mapLinkItem.map((item, index) => (
                         <NavigationMenuItem key={index}>
                             <Link href={item.href}>
-                                <Button variant={"outline"} size={"icon"}>
+                                <Button variant={"outline"} size={"icon"} aria-label={item.name}>
                                     {item.content}
                                 </Button>
                             </Link>
@@ -119,6 +128,7 @@ export default function MenuNavigation({
                                 variant={"outline"}
                                 size={"icon"}
                                 onClick={() => controlFloor(item.parameter)}
+                                aria-label={item.name}
                             >
                                 {item.content}
                             </Button>

@@ -80,13 +80,15 @@ export default function MapControl({ session }: MapControlProps) {
     return (
         <>
             {(!isLoaded || cityMarks.length === 0) && (
-                <div className="flex h-screen flex-col items-center justify-center">
+                <main className="flex h-screen flex-col items-center justify-center">
                     <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-gray-900" />
                     <span className={"animate-pulse"}>Loading...</span>
-                </div>
+                </main>
             )}
             <main
-                className={"pokebro-map h-[100vh] overflow-x-hidden overflow-y-hidden bg-black"}
+                className={`pokebro-map h-[100vh] overflow-x-hidden  overflow-y-hidden bg-black ${
+                    isLoaded ? "block" : "hidden"
+                }}`}
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}
                 onWheel={(e) => onZoom(e.nativeEvent)}
                 onTouchStart={(e) => onTouchStart(e.nativeEvent)}
@@ -112,6 +114,7 @@ export default function MapControl({ session }: MapControlProps) {
                                     variant={"outline"}
                                     size={"icon"}
                                     onClick={() => setShowNameCity(!showNameCity)}
+                                    aria-label={"Show city names"}
                                 >
                                     <Building />
                                 </Button>
@@ -119,6 +122,7 @@ export default function MapControl({ session }: MapControlProps) {
                                     variant={"outline"}
                                     size={"icon"}
                                     onClick={() => setShowTrail(!showTrail)}
+                                    aria-label={"Show trail marks"}
                                 >
                                     <Coins />
                                 </Button>
