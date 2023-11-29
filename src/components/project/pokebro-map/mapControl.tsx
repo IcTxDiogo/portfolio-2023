@@ -36,6 +36,7 @@ export default function MapControl({ session }: MapControlProps) {
     const [showNameCity, setShowNameCity] = useState(true);
     const [showTrail, setShowTrail] = useState(false);
     const [trailMarks, setTrailMarks] = useState<MapMarkers>([]);
+    const [findDialog, setFindDialog] = useState(false);
     const cityMarks =
         api.pokebroMap.getCitiesMarkers.useQuery(undefined, {
             staleTime: Infinity,
@@ -99,24 +100,36 @@ export default function MapControl({ session }: MapControlProps) {
                             <ShowMarkMap scale={scale} Marks={trailMarks} actualFloor={floor} />
                         )}
                     </div>
-                    <MenuNavigation floor={floor} setFloor={setFloor} doZoom={doZoom}>
-                        <UserSessionButton session={session} />
-                        <Button
-                            variant={"outline"}
-                            size={"icon"}
-                            onClick={() => setShowNameCity(!showNameCity)}
-                        >
-                            <Building />
-                        </Button>
-                        <Button
-                            variant={"outline"}
-                            size={"icon"}
-                            onClick={() => setShowTrail(!showTrail)}
-                        >
-                            <Coins />
-                        </Button>
-                    </MenuNavigation>
-                    <ShowFindDialog handleSelectMarker={handleSelectMarker} />
+                    <MenuNavigation
+                        floor={floor}
+                        setFloor={setFloor}
+                        doZoom={doZoom}
+                        setFindDialog={setFindDialog}
+                        topItems={<UserSessionButton session={session} />}
+                        bottomItems={
+                            <>
+                                <Button
+                                    variant={"outline"}
+                                    size={"icon"}
+                                    onClick={() => setShowNameCity(!showNameCity)}
+                                >
+                                    <Building />
+                                </Button>
+                                <Button
+                                    variant={"outline"}
+                                    size={"icon"}
+                                    onClick={() => setShowTrail(!showTrail)}
+                                >
+                                    <Coins />
+                                </Button>
+                            </>
+                        }
+                    />
+                    <ShowFindDialog
+                        handleSelectMarker={handleSelectMarker}
+                        findDialog={findDialog}
+                        setFindDialog={setFindDialog}
+                    />
                 </AddNewMarkDialog>
             </main>
         </>

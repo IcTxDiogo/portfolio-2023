@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Home, Minus, Plus } from "lucide-react";
+import { ArrowDown, ArrowUp, Home, Keyboard, Minus, Plus } from "lucide-react";
 import { type ReactNode } from "react";
 import {
     NavigationMenu,
@@ -12,10 +12,12 @@ type MenuNavigationProps = {
     floor: number;
     setFloor: (floor: number) => void;
     doZoom: (zoomIn: boolean) => void;
-    children?: ReactNode;
+    setFindDialog: (open: boolean) => void;
+    topItems?: ReactNode;
+    bottomItems?: ReactNode;
 };
 
-type Action = "up" | "down" | "7" | "in" | "out";
+type Action = "up" | "down" | "7" | "in" | "out" | "search";
 
 type MapNavigationItem = {
     content: ReactNode;
@@ -27,7 +29,14 @@ type MapLinkItem = {
     href: string;
 };
 
-export default function MenuNavigation({ floor, setFloor, doZoom, children }: MenuNavigationProps) {
+export default function MenuNavigation({
+    floor,
+    setFloor,
+    doZoom,
+    setFindDialog,
+    topItems,
+    bottomItems,
+}: MenuNavigationProps) {
     function controlFloor(action: Action) {
         if (action === "up") {
             if (floor < 15) {
@@ -38,17 +47,17 @@ export default function MenuNavigation({ floor, setFloor, doZoom, children }: Me
                 setFloor(floor - 1);
             }
         } else if (action === "in") {
-            console.log("in");
             doZoom(true);
         } else if (action === "out") {
-            console.log("out");
             doZoom(false);
+        } else if (action === "search") {
+            setFindDialog(true);
         } else {
             setFloor(7);
         }
     }
 
-    const mapNavigationItem: MapNavigationItem[] = [
+    const CenterMapNavigationItems: MapNavigationItem[] = [
         {
             content: <Plus />,
             parameter: "in",
@@ -68,6 +77,10 @@ export default function MenuNavigation({ floor, setFloor, doZoom, children }: Me
         {
             content: <Minus />,
             parameter: "out",
+        },
+        {
+            content: <Keyboard />,
+            parameter: "search",
         },
     ];
 
@@ -99,7 +112,8 @@ export default function MenuNavigation({ floor, setFloor, doZoom, children }: Me
                             </Link>
                         </NavigationMenuItem>
                     ))}
-                    {mapNavigationItem.map((item, index) => (
+                    {topItems}
+                    {CenterMapNavigationItems.map((item, index) => (
                         <NavigationMenuItem key={index}>
                             <Button
                                 variant={"outline"}
@@ -110,7 +124,7 @@ export default function MenuNavigation({ floor, setFloor, doZoom, children }: Me
                             </Button>
                         </NavigationMenuItem>
                     ))}
-                    {children}
+                    {bottomItems}
                 </NavigationMenuList>
             </NavigationMenu>
         </div>

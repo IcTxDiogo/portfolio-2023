@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
 
-import { CommandDialog, CommandInput } from "@/components/ui/command";
-import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import ShowFindDialogList from "@/components/project/pokebro-map/showFindDialogList";
+import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
+import { CommandDialog, CommandInput } from "@/components/ui/command";
 
 type ShowFindDialogProps = {
     handleSelectMarker: (marker: MapMarkers[number]) => void;
+    findDialog: boolean;
+    setFindDialog: (open: boolean) => void;
 };
 
-export default function ShowFindDialog({ handleSelectMarker }: ShowFindDialogProps) {
-    const [findDialog, setFindDialog] = useState(false);
+export default function ShowFindDialog({
+    handleSelectMarker,
+    findDialog,
+    setFindDialog,
+}: ShowFindDialogProps) {
     const [dialogSearchValue, setDialogSearchValue] = useState("");
 
     useEffect(() => {
         function down(e: KeyboardEvent) {
             if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
-                setFindDialog((open) => !open);
+                setFindDialog(!open);
             }
         }
 

@@ -38,7 +38,6 @@ export const authOptions: NextAuthOptions = {
             const userWithRole = await db.query.users.findFirst({
                 where: (user, { eq }) => eq(user.id, loggedUserId),
             });
-            console.log(userWithRole);
             return {
                 ...session,
                 user: {
