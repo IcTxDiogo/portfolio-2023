@@ -40,7 +40,6 @@ export default function AddNewMarkDialogForm({ clickPosition }: AddNewMarkDialog
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         markCreate.mutate(values);
-        console.log("teste");
         router.refresh();
     }
 

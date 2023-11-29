@@ -36,6 +36,7 @@ export default function MapControl({ session }: MapControlProps) {
     const [showNameCity, setShowNameCity] = useState(true);
     const [showTrail, setShowTrail] = useState(false);
     const [trailMarks, setTrailMarks] = useState<MapMarkers>([]);
+    const [findDialog, setFindDialog] = useState(false);
     const cityMarks =
         api.pokebroMap.getCitiesMarkers.useQuery(undefined, {
             staleTime: Infinity,
@@ -79,13 +80,15 @@ export default function MapControl({ session }: MapControlProps) {
     return (
         <>
             {(!isLoaded || cityMarks.length === 0) && (
-                <div className="flex h-screen flex-col items-center justify-center">
+                <main className="flex h-screen flex-col items-center justify-center">
                     <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-gray-900" />
                     <span className={"animate-pulse"}>Loading...</span>
-                </div>
+                </main>
             )}
             <main
-                className={"pokebro-map h-[100vh] overflow-x-hidden overflow-y-hidden bg-black"}
+                className={`pokebro-map h-[100vh] overflow-x-hidden  overflow-y-hidden bg-black ${
+                    isLoaded ? "block" : "hidden"
+                }}`}
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}
                 onWheel={(e) => onZoom(e.nativeEvent)}
                 onTouchStart={(e) => onTouchStart(e.nativeEvent)}
@@ -99,24 +102,38 @@ export default function MapControl({ session }: MapControlProps) {
                             <ShowMarkMap scale={scale} Marks={trailMarks} actualFloor={floor} />
                         )}
                     </div>
-                    <MenuNavigation floor={floor} setFloor={setFloor} doZoom={doZoom}>
-                        <UserSessionButton session={session} />
-                        <Button
-                            variant={"outline"}
-                            size={"icon"}
-                            onClick={() => setShowNameCity(!showNameCity)}
-                        >
-                            <Building />
-                        </Button>
-                        <Button
-                            variant={"outline"}
-                            size={"icon"}
-                            onClick={() => setShowTrail(!showTrail)}
-                        >
-                            <Coins />
-                        </Button>
-                    </MenuNavigation>
-                    <ShowFindDialog handleSelectMarker={handleSelectMarker} />
+                    <MenuNavigation
+                        floor={floor}
+                        setFloor={setFloor}
+                        doZoom={doZoom}
+                        setFindDialog={setFindDialog}
+                        topItems={<UserSessionButton session={session} />}
+                        bottomItems={
+                            <>
+                                <Button
+                                    variant={"outline"}
+                                    size={"icon"}
+                                    onClick={() => setShowNameCity(!showNameCity)}
+                                    aria-label={"Show city names"}
+                                >
+                                    <Building />
+                                </Button>
+                                <Button
+                                    variant={"outline"}
+                                    size={"icon"}
+                                    onClick={() => setShowTrail(!showTrail)}
+                                    aria-label={"Show trail marks"}
+                                >
+                                    <Coins />
+                                </Button>
+                            </>
+                        }
+                    />
+                    <ShowFindDialog
+                        handleSelectMarker={handleSelectMarker}
+                        findDialog={findDialog}
+                        setFindDialog={setFindDialog}
+                    />
                 </AddNewMarkDialog>
             </main>
         </>

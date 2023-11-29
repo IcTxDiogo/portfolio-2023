@@ -18,7 +18,12 @@ export default function UserSessionButton({ session }: SignOutButtonProps) {
         }
     }
     return (
-        <Button variant={"outline"} size={"icon"} onClick={handleSesion}>
+        <Button
+            variant={"outline"}
+            size={"icon"}
+            onClick={handleSesion}
+            aria-label={session ? "Sign Out" : "Sign In"}
+        >
             {session ? <LogOut /> : <LogIn />}
         </Button>
     );

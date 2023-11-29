@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Home, Minus, Plus } from "lucide-react";
+import { ArrowDown, ArrowUp, Home, Keyboard, Minus, Plus } from "lucide-react";
 import { type ReactNode } from "react";
 import {
     NavigationMenu,
@@ -12,22 +12,33 @@ type MenuNavigationProps = {
     floor: number;
     setFloor: (floor: number) => void;
     doZoom: (zoomIn: boolean) => void;
-    children?: ReactNode;
+    setFindDialog: (open: boolean) => void;
+    topItems?: ReactNode;
+    bottomItems?: ReactNode;
 };
 
-type Action = "up" | "down" | "7" | "in" | "out";
+type Action = "up" | "down" | "7" | "in" | "out" | "search";
 
 type MapNavigationItem = {
     content: ReactNode;
     parameter: Action;
+    name: string;
 };
 
 type MapLinkItem = {
     content: ReactNode;
     href: string;
+    name: string;
 };
 
-export default function MenuNavigation({ floor, setFloor, doZoom, children }: MenuNavigationProps) {
+export default function MenuNavigation({
+    floor,
+    setFloor,
+    doZoom,
+    setFindDialog,
+    topItems,
+    bottomItems,
+}: MenuNavigationProps) {
     function controlFloor(action: Action) {
         if (action === "up") {
             if (floor < 15) {
@@ -38,36 +49,46 @@ export default function MenuNavigation({ floor, setFloor, doZoom, children }: Me
                 setFloor(floor - 1);
             }
         } else if (action === "in") {
-            console.log("in");
             doZoom(true);
         } else if (action === "out") {
-            console.log("out");
             doZoom(false);
+        } else if (action === "search") {
+            setFindDialog(true);
         } else {
             setFloor(7);
         }
     }
 
-    const mapNavigationItem: MapNavigationItem[] = [
+    const CenterMapNavigationItems: MapNavigationItem[] = [
         {
             content: <Plus />,
             parameter: "in",
+            name: "Zoom in",
         },
         {
             content: <ArrowUp />,
             parameter: "up",
+            name: "Up floor",
         },
         {
             content: floor,
             parameter: "7",
+            name: `Actual floor ${floor}`,
         },
         {
             content: <ArrowDown />,
             parameter: "down",
+            name: "Down floor",
         },
         {
             content: <Minus />,
             parameter: "out",
+            name: "Zoom out",
+        },
+        {
+            content: <Keyboard />,
+            parameter: "search",
+            name: "Search",
         },
     ];
 
@@ -75,6 +96,7 @@ export default function MenuNavigation({ floor, setFloor, doZoom, children }: Me
         {
             content: <Home />,
             href: "/projects",
+            name: "Back to projects",
         },
     ];
 
@@ -93,24 +115,26 @@ export default function MenuNavigation({ floor, setFloor, doZoom, children }: Me
                     {mapLinkItem.map((item, index) => (
                         <NavigationMenuItem key={index}>
                             <Link href={item.href}>
-                                <Button variant={"outline"} size={"icon"}>
+                                <Button variant={"outline"} size={"icon"} aria-label={item.name}>
                                     {item.content}
                                 </Button>
                             </Link>
                         </NavigationMenuItem>
                     ))}
-                    {mapNavigationItem.map((item, index) => (
+                    {topItems}
+                    {CenterMapNavigationItems.map((item, index) => (
                         <NavigationMenuItem key={index}>
                             <Button
                                 variant={"outline"}
                                 size={"icon"}
                                 onClick={() => controlFloor(item.parameter)}
+                                aria-label={item.name}
                             >
                                 {item.content}
                             </Button>
                         </NavigationMenuItem>
                     ))}
-                    {children}
+                    {bottomItems}
                 </NavigationMenuList>
             </NavigationMenu>
         </div>
