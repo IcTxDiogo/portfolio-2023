@@ -53,8 +53,12 @@ export default function reducer(state = initialState, action: Action) {
             };
         }
         case "RESIZE": {
+            const posX = action.width / 2 - 1024 * state.scale;
+            const posY = action.height / 2 - 1024 * state.scale;
             return {
                 ...state,
+                posX,
+                posY,
                 width: action.width,
                 height: action.height,
             };

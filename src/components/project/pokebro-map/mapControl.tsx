@@ -14,6 +14,8 @@ import useMapControl from "@/reducers/map-control/useMapControl";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 
+export const IMAGE_SIZE = 2048;
+
 type MapControlProps = {
     session: Session | null;
 };
@@ -54,8 +56,8 @@ export default function MapControl({ session }: MapControlProps) {
         return {
             transform: `translate(${posX}px, ${posY}px) scale(${scale})`,
             backgroundImage: `url(/pokebro-map/map-images/${fileFloor}.png)`,
-            width: "2048px",
-            height: "2048px",
+            width: `${IMAGE_SIZE}px`,
+            height: `${IMAGE_SIZE}px`,
         };
     }
 
@@ -86,9 +88,11 @@ export default function MapControl({ session }: MapControlProps) {
                 </main>
             )}
             <main
-                className={`pokebro-map m-0 h-screen w-screen overflow-x-hidden overflow-y-hidden bg-black ${
-                    isLoaded ? "block" : "hidden"
-                }}`}
+                className={
+                    !isLoaded || cityMarks.length === 0
+                        ? "hidden"
+                        : "pokebro-map m-0 h-screen w-screen overflow-x-hidden overflow-y-hidden bg-black"
+                }
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}
                 onWheel={(e) => onZoom(e.nativeEvent)}
                 onTouchStart={(e) => onTouchStart(e.nativeEvent)}
@@ -103,6 +107,7 @@ export default function MapControl({ session }: MapControlProps) {
                         )}
                     </div>
                     <MenuNavigation
+                        className={!isLoaded || cityMarks.length === 0 ? "hidden" : ""}
                         floor={floor}
                         setFloor={setFloor}
                         doZoom={doZoom}
