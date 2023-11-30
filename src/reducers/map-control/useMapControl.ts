@@ -40,6 +40,22 @@ export default function useMapControl() {
 
         window.addEventListener("resize", onResize);
 
+        if (
+            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                navigator.userAgent,
+            )
+        ) {
+            document
+                .querySelector("body")
+                ?.requestFullscreen()
+                .then(() => {
+                    console.log("Fullscreen enabled");
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+
         return () => {
             window.removeEventListener("resize", onResize);
         };
