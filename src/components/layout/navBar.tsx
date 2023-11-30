@@ -1,10 +1,10 @@
-import { type ReactNode } from "react";
-
-import ThemeToggle from "@/components/themeToggle";
-import { Separator } from "@/components/ui/separator";
-import NavBarGenerateMenu from "@/components/layout/navBarGenerateMenu";
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { type ReactNode } from "react";
+import Link from "next/link";
+
+import NavBarGenerateMenu from "@/components/layout/navBarGenerateMenu";
+import { Separator } from "@/components/ui/separator";
+import ThemeToggle from "@/components/themeToggle";
 import { Button } from "@/components/ui/button";
 
 export type MenuItem = {

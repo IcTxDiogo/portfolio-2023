@@ -1,5 +1,6 @@
-import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 import { MapPin } from "lucide-react";
+
+import { type MapMarkers } from "@/app/(pages)/project/pokebro-map/page";
 
 type ShowNameCityProps = {
     scale: number;

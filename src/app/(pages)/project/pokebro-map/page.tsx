@@ -1,8 +1,9 @@
+import { Suspense } from "react";
+
 import MapControl from "@/components/project/pokebro-map/mapControl";
 import { type inferAsyncReturnType } from "@trpc/server";
 import { getServerAuthSession } from "@/server/auth";
 import { type api } from "@/trpc/server";
-import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 

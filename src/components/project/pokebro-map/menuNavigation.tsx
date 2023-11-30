@@ -1,12 +1,13 @@
-import { ArrowDown, ArrowUp, Home, Keyboard, Minus, Plus } from "lucide-react";
+import { ArrowDown, ArrowUp, Fullscreen, Home, Keyboard, Minus, Plus } from "lucide-react";
 import { type ReactNode } from "react";
+import Link from "next/link";
+
 import {
     NavigationMenu,
     NavigationMenuItem,
     NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 type MenuNavigationProps = {
     floor: number;
@@ -25,12 +26,6 @@ type MapNavigationItem = {
     name: string;
 };
 
-type MapLinkItem = {
-    content: ReactNode;
-    href: string;
-    name: string;
-};
-
 export default function MenuNavigation({
     floor,
     setFloor,
@@ -39,6 +34,15 @@ export default function MenuNavigation({
     topItems,
     bottomItems,
 }: MenuNavigationProps) {
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            void document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                void document.exitFullscreen();
+            }
+        }
+    }
     function controlFloor(action: Action) {
         if (action === "up") {
             if (floor < 15) {
@@ -92,14 +96,6 @@ export default function MenuNavigation({
         },
     ];
 
-    const mapLinkItem: MapLinkItem[] = [
-        {
-            content: <Home />,
-            href: "/projects",
-            name: "Back to projects",
-        },
-    ];
-
     return (
         <div
             className={
@@ -112,15 +108,27 @@ export default function MenuNavigation({
                         "flex max-w-fit flex-col items-center justify-center gap-2 space-x-0"
                     }
                 >
-                    {mapLinkItem.map((item, index) => (
-                        <NavigationMenuItem key={index}>
-                            <Link href={item.href}>
-                                <Button variant={"outline"} size={"icon"} aria-label={item.name}>
-                                    {item.content}
-                                </Button>
-                            </Link>
-                        </NavigationMenuItem>
-                    ))}
+                    <NavigationMenuItem>
+                        <Link href={"/projects"}>
+                            <Button
+                                variant={"outline"}
+                                size={"icon"}
+                                aria-label={"Back to projects"}
+                            >
+                                <Home />
+                            </Button>
+                        </Link>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                        <Button
+                            variant={"outline"}
+                            size={"icon"}
+                            onClick={() => toggleFullScreen()}
+                            aria-label={"toggle full screen"}
+                        >
+                            <Fullscreen />
+                        </Button>
+                    </NavigationMenuItem>
                     {topItems}
                     {CenterMapNavigationItems.map((item, index) => (
                         <NavigationMenuItem key={index}>

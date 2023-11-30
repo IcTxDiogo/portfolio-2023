@@ -1,6 +1,6 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { type BaseTechnology } from "@/app/(pages)/(home)/page";
 
 interface TechnologyProps {
