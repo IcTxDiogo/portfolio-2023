@@ -86,7 +86,7 @@ export default function MapControl({ session }: MapControlProps) {
                 </main>
             )}
             <main
-                className={`pokebro-map h-[100vh] overflow-x-hidden  overflow-y-hidden bg-black ${
+                className={`pokebro-map m-0 h-screen w-screen overflow-x-hidden overflow-y-hidden bg-black ${
                     isLoaded ? "block" : "hidden"
                 }}`}
                 onMouseDown={(e) => onMouseDown(e.nativeEvent)}

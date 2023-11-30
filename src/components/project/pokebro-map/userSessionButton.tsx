@@ -1,9 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { signIn, signOut } from "next-auth/react";
 import { LogIn, LogOut } from "lucide-react";
 import { type Session } from "next-auth";
-import { signIn, signOut } from "next-auth/react";
+
+import { Button } from "@/components/ui/button";
 
 type SignOutButtonProps = {
     session: Session | null;

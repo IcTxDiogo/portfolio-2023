@@ -21,13 +21,12 @@ export default function ShowFindDialog({
         function down(e: KeyboardEvent) {
             if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
-                setFindDialog(!open);
+                setFindDialog(!findDialog);
             }
         }
-
         document.addEventListener("keydown", down);
         return () => document.removeEventListener("keydown", down);
-    }, []);
+    }, [setFindDialog, findDialog]);
 
     return (
         <div onWheel={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
