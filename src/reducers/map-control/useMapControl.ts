@@ -37,9 +37,16 @@ export default function useMapControl() {
         }
 
         onResize();
+        setIsLoaded(true);
 
         window.addEventListener("resize", onResize);
 
+        return () => {
+            window.removeEventListener("resize", onResize);
+        };
+    }, []);
+
+    useEffect(() => {
         if (
             /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
                 navigator.userAgent,
@@ -55,17 +62,6 @@ export default function useMapControl() {
                     console.log(err);
                 });
         }
-
-        return () => {
-            window.removeEventListener("resize", onResize);
-        };
-    }, []);
-
-    useEffect(() => {
-        const divRect = getDivRect();
-        if (!divRect) return;
-        dispatch(goto(divRect.width / 2, divRect.height / 2, divRect));
-        setIsLoaded(true);
     }, []);
 
     function onMouseDown(e: MouseEvent) {

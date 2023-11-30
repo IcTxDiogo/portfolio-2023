@@ -8,6 +8,7 @@ import {
     NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type MenuNavigationProps = {
     floor: number;
@@ -16,6 +17,7 @@ type MenuNavigationProps = {
     setFindDialog: (open: boolean) => void;
     topItems?: ReactNode;
     bottomItems?: ReactNode;
+    className?: string;
 };
 
 type Action = "up" | "down" | "7" | "in" | "out" | "search";
@@ -33,6 +35,7 @@ export default function MenuNavigation({
     setFindDialog,
     topItems,
     bottomItems,
+    className,
 }: MenuNavigationProps) {
     function toggleFullScreen() {
         if (!document.fullscreenElement) {
@@ -98,9 +101,10 @@ export default function MenuNavigation({
 
     return (
         <div
-            className={
-                "absolute inset-y-0 right-[20px] z-50 flex flex-col items-center justify-center gap-2 "
-            }
+            className={cn(
+                "absolute inset-y-0 right-[20px] z-50 flex flex-col items-center justify-center gap-2 ",
+                className,
+            )}
         >
             <NavigationMenu>
                 <NavigationMenuList
