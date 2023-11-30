@@ -55,7 +55,7 @@ export default function MapControl({ session }: MapControlProps) {
         }
         return {
             transform: `translate(${posX}px, ${posY}px) scale(${scale})`,
-            backgroundImage: `url(/pokebro-map/map-images/${fileFloor}.png)`,
+            backgroundImage: `url(/pokebro-map/map-images/${fileFloor}.webp)`,
             width: `${IMAGE_SIZE}px`,
             height: `${IMAGE_SIZE}px`,
         };
