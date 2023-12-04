@@ -35,10 +35,13 @@ export default function MapControl({ session }: MapControlProps) {
         doZoom,
     } = useMapControl();
     const [floor, setFloor] = useState(7);
-    const [showNameCity, setShowNameCity] = useState(true);
-    const [showTrail, setShowTrail] = useState(false);
-    const [trailMarks, setTrailMarks] = useState<MapMarkers>([]);
+
     const [findDialog, setFindDialog] = useState(false);
+
+    const [showDynamicMarkers, setShowDynamicMarkers] = useState(false);
+    const [dynamicMarkers, setDynamicMarkers] = useState<MapMarkers>([]);
+
+    const [showNameCity, setShowNameCity] = useState(true);
     const cityMarks =
         api.pokebroMap.getCitiesMarkers.useQuery(undefined, {
             staleTime: Infinity,
@@ -63,8 +66,8 @@ export default function MapControl({ session }: MapControlProps) {
 
     function handleSelectMarker(marker: MapMarkers[number]) {
         if (marker.type === "trails") {
-            setTrailMarks((marks) => [...marks, marker]);
-            setShowTrail(true);
+            setDynamicMarkers((marks) => [...marks, marker]);
+            setShowDynamicMarkers(true);
             maxZoom();
         }
         setFloor(marker.floor);
@@ -102,8 +105,8 @@ export default function MapControl({ session }: MapControlProps) {
                         {showNameCity && (
                             <ShowMarkMap scale={scale} Marks={cityMarks} actualFloor={floor} />
                         )}
-                        {showTrail && (
-                            <ShowMarkMap scale={scale} Marks={trailMarks} actualFloor={floor} />
+                        {showDynamicMarkers && (
+                            <ShowMarkMap scale={scale} Marks={dynamicMarkers} actualFloor={floor} />
                         )}
                     </div>
                     <MenuNavigation
@@ -126,7 +129,7 @@ export default function MapControl({ session }: MapControlProps) {
                                 <Button
                                     variant={"outline"}
                                     size={"icon"}
-                                    onClick={() => setShowTrail(!showTrail)}
+                                    onClick={() => setShowDynamicMarkers(!showDynamicMarkers)}
                                     aria-label={"Show trail marks"}
                                 >
                                     <Coins />
